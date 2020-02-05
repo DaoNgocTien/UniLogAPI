@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DataService</name>
+    </assembly>
+    <members>
+        <member name="M:DataService.Models.Services.AccountService.ChangePassword(DataService.RequestModels.PasswordModel)">
+            <summary>
+            Change or Reset Password
+            </summary>
+            <param name="passwordModel"></param>
+            <param name="Token"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataService.Utils.ResponseAPI.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:DataService.Utils.ResponseAPI.GetContent``1(``0)">
+            <summary>
+            Convert Content To String Content
+            </summary>
+            <typeparam name="T">Type of Data</typeparam>
+            <param name="data">Data</param>
+            <returns></returns>
+        </member>
+        <member name="M:DataService.Utils.ResponseAPI.ReadAsJsonAsync``1(System.Net.Http.HttpContent)">
+            <summary>
+            Read Json as Convert To Data
+            </summary>
+            <typeparam name="T">Type of Data</typeparam>
+            <param name="content">HttpContent</param>
+            <returns></returns>
+        </member>
+        <member name="M:DataService.Utils.UniLogUtil.GetTimeCode(System.Int32)">
+            <summary>
+            Pass the gmt time and get the time code
+            </summary>
+            <param name="gmt"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Core.DataService.Models.Filters.BaseFilter.fields">
+            <summary>
+            List of request column
+            Service Layer not handle this request
+            Client of service take all fields of objects
+            Using for client call api or controller
+            </summary>
+            
+        </member>
+    </members>
+</doc>
