@@ -53,16 +53,10 @@ namespace DataService.ServiceModels
 		public string Type { get; set; }
 		[JsonProperty("update_time")]
 		public DateTime? UpdateTime { get; set; }
-		[JsonProperty("application_characteristic")]
-		public ApplicationCharacteristicServiceModel ApplicationCharacteristic { get; set; }
 		[JsonProperty("systems")]
 		public SystemsServiceModel Systems { get; set; }
 		[JsonProperty("application_instance")]
 		public IEnumerable<ApplicationInstanceServiceModel> ApplicationInstance { get; set; }
-		[JsonProperty("application_relation_client")]
-		public IEnumerable<ApplicationRelationServiceModel> ApplicationRelationClient { get; set; }
-		[JsonProperty("application_relation_service")]
-		public IEnumerable<ApplicationRelationServiceModel> ApplicationRelationService { get; set; }
 		[JsonProperty("manage_project")]
 		public IEnumerable<ManageProjectServiceModel> ManageProject { get; set; }
 		[JsonProperty("repo")]
@@ -122,16 +116,10 @@ namespace DataService.ServiceModels
 		public Wrapper<string> Type { get; set; }
 		[JsonProperty("update_time")]
 		public Wrapper<DateTime?> UpdateTime { get; set; }
-		[JsonProperty("application_characteristic")]
-		public ApplicationCharacteristicServiceModel ApplicationCharacteristic { get; set; }
 		[JsonProperty("systems")]
 		public SystemsServiceModel Systems { get; set; }
 		[JsonProperty("application_instance")]
 		public IEnumerable<ApplicationInstanceServiceModel> ApplicationInstance { get; set; }
-		[JsonProperty("application_relation_client")]
-		public IEnumerable<ApplicationRelationServiceModel> ApplicationRelationClient { get; set; }
-		[JsonProperty("application_relation_service")]
-		public IEnumerable<ApplicationRelationServiceModel> ApplicationRelationService { get; set; }
 		[JsonProperty("manage_project")]
 		public IEnumerable<ManageProjectServiceModel> ManageProject { get; set; }
 		[JsonProperty("repo")]

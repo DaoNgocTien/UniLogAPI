@@ -27,12 +27,22 @@ namespace DataService.Models.Services
         {
             try
             {
-                var user = _repo.GetActive().Where(p => p.Email == requestModel.Email ).FirstOrDefault();
+                UniLogUtil utils = new UniLogUtil();
+                AspNetUsers user = null;
+                if (String.IsNullOrEmpty(requestModel.CurrentPassword))
+                {
+                    user = _repo.GetActive().Where(p => p.Email == requestModel.Email).FirstOrDefault();
+                }
+                else
+                {
+                    user = _repo.GetActive().Where(p => p.Email == requestModel.Email && p.PasswordHash == utils.GetMd5HashData(requestModel.CurrentPassword)).FirstOrDefault();
+                }
+
                 if (user == null)
                 {
                     return null;
                 }
-                UniLogUtil utils = new UniLogUtil();
+
                 user.PasswordHash = utils.GetMd5HashData(requestModel.NewPassword);
                 _repo.Update(user);
                 _repo.SaveChanges();
@@ -54,7 +64,7 @@ namespace DataService.Models.Services
                     return null;
                 }
                 var token = _aspNetUserTokensRepo.Get().Where(p => p.UserId == user.Id && p.Name == user.Name && p.Value == model.Token).FirstOrDefault();
-                if (token == null)
+                if (token == null || model.NewPassword != model.ConfirmPassword)
                 {
                     return false;
                 }
@@ -102,9 +112,12 @@ namespace DataService.Models.Services
             {
                 return null;
             }
-            var token = CreateToken(email);
+
 
             var userToken = _aspNetUserTokensRepo.Get().Where(p => p.UserId == user.Id && p.Name == user.Name).FirstOrDefault();
+            //  if token is not exist 
+            //  create new token for reseting password and send to user's mail
+            string token = CreateToken(email);
             if (userToken == null)
             {
                 userToken = new AspNetUserTokens()
@@ -116,10 +129,12 @@ namespace DataService.Models.Services
                 };
                 _aspNetUserTokensRepo.Create(userToken);
             }
+            //  if token exist
+            //  delete the token (when user has used token already to reset password)
             else
             {
-                userToken.Value = token;
-                _aspNetUserTokensRepo.Update(userToken);
+
+                _aspNetUserTokensRepo.Remove(userToken);
             }
 
             _aspNetUserTokensRepo.SaveChanges();

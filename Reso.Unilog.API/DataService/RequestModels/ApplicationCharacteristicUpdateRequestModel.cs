@@ -13,10 +13,10 @@ namespace DataService.RequestModels
         [Required(ErrorMessage = "Application Id must be define")]
         public  int ApplicationId { get; set; }
 
-        //[JsonProperty("ecf")]
-        //public  EcfPartialUpadteRequestModel ecf { get; set; }
-        //[JsonProperty("tcf")]
-        //public  TcfPartialUpadteRequestModel tcf { get; set; }
+       [JsonProperty("ecf")]
+        public  EcfPartialUpadteRequestModel ecf { get; set; }
+       [JsonProperty("tcf")]
+        public  TcfPartialUpadteRequestModel tcf { get; set; }
        
       
     }

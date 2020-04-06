@@ -8,7 +8,6 @@ namespace DataService.Models
         public Systems()
         {
             Application = new HashSet<Application>();
-            ManageProject = new HashSet<ManageProject>();
         }
 
         public int Id { get; set; }
@@ -19,6 +18,5 @@ namespace DataService.Models
         public DateTime? UpdateTime { get; set; }
 
         public virtual ICollection<Application> Application { get; set; }
-        public virtual ICollection<ManageProject> ManageProject { get; set; }
     }
 }

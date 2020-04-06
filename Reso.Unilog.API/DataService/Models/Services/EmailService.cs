@@ -22,13 +22,13 @@ namespace DataService.Models.Services
         {
             emailConfiguration.SmtpServer = "smtp.gmail.com";
             emailConfiguration.SmtpPort = 465;
-            emailConfiguration.SmtpUsername = "tien.dao@wisky.vn";
-            emailConfiguration.SmtpPassword = "Tienthang123";
+            emailConfiguration.SmtpUsername = "hoanglamlalaland@gmail.com";
+            emailConfiguration.SmtpPassword = "imolas123";
 
             emailConfiguration.PopServer = "Pop.gmail.com";
             emailConfiguration.PopPort = 995;
-            emailConfiguration.PopUsername = "tien.dao@wisky.vn";
-            emailConfiguration.PopPassword = "Tienthang123";
+            emailConfiguration.PopUsername = "hoanglamlalaland@gmail.com";
+            emailConfiguration.PopPassword = "imolas123";
             _emailConfiguration = emailConfiguration;
         }
 

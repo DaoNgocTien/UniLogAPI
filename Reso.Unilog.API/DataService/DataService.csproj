@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -14,67 +14,30 @@
 
   <ItemGroup>
     <Compile Remove="Models\Utils\**" />
-    <Compile Remove="RequestModels\**" />
     <EmbeddedResource Remove="Models\Utils\**" />
-    <EmbeddedResource Remove="RequestModels\**" />
     <None Remove="Models\Utils\**" />
-    <None Remove="RequestModels\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="RequestModels\AccountCreateRequestModel.cs" />
-    <Compile Include="RequestModels\AccountUpdateRequestModel.cs" />
-    <Compile Include="RequestModels\ActivityLogCreateRequestModel.cs" />
-    <Compile Include="RequestModels\ActivityLogPartialUpdateRequestModel.cs" />
-    <Compile Include="RequestModels\ActivityLogUpdateRequestModel.cs" />
-    <Compile Include="RequestModels\ApplicationCharacteristicCreateRequestModel.cs" />
-    <Compile Include="RequestModels\ApplicationCharacteristicPartialUpdateRequestModel.cs" />
-    <Compile Include="RequestModels\ApplicationCharacteristicUpdateRequestModel.cs" />
-    <Compile Include="RequestModels\ApplicationCreateRequestModel.cs" />
-    <Compile Include="RequestModels\ApplicationInstanceCreateRequestModel.cs" />
-    <Compile Include="RequestModels\ApplicationInstancePartialUpdateRequestModel.cs" />
-    <Compile Include="RequestModels\ApplicationInstanceUpdateRequestModel.cs" />
-    <Compile Include="RequestModels\ApplicationPartialUpdateRequestModel.cs" />
-    <Compile Include="RequestModels\ApplicationUpdateRequestModel.cs" />
-    <Compile Include="RequestModels\AppUpdateRequestModel.cs" />
-    <Compile Include="RequestModels\AspNetUsersCreateRequestModel.cs" />
-    <Compile Include="RequestModels\AspNetUsersPartialUpdateRequestModel.cs" />
-    <Compile Include="RequestModels\AuthorizeRequestModel.cs" />
-    <Compile Include="RequestModels\CreateRequestModel.cs" />
-    <Compile Include="RequestModels\CreateRequestModels\AppCreateRequestModel.cs" />
-    <Compile Include="RequestModels\CreateRequestModels\AppInstanceCreateRequestModel.cs" />
-    <Compile Include="RequestModels\CreateRequestModels\CreateRequestModel.cs" />
-    <Compile Include="RequestModels\CreateRequestModels\SerCreateRequestModel.cs" />
-    <Compile Include="RequestModels\LogCreateRequestModel.cs" />
-    <Compile Include="RequestModels\LogPartialUpdateRequestModel.cs" />
-    <Compile Include="RequestModels\LogUpdateRequestModel.cs" />
-    <Compile Include="RequestModels\RepoCreateRequestModel.cs" />
-    <Compile Include="RequestModels\RepoPartialUpdateRequestModel.cs" />
-    <Compile Include="RequestModels\RepoUpdateRequestModel.cs" />
-    <Compile Include="RequestModels\ServerAccountCreateRequestModel.cs" />
-    <Compile Include="RequestModels\ServerAccountPartialUpdateRequestModel.cs" />
-    <Compile Include="RequestModels\ServerAccountUpdateRequestModel.cs" />
-    <Compile Include="RequestModels\ServerCreateRequestModel.cs" />
-    <Compile Include="RequestModels\ServerDetailCreateRequestModel.cs" />
-    <Compile Include="RequestModels\ServerDetailUpdateRequestModel.cs" />
-    <Compile Include="RequestModels\ServerPartialUpdateRequestModel.cs" />
-    <Compile Include="RequestModels\ServerUpdateRequestModel.cs" />
-    <Compile Include="RequestModels\SystemCreateRequestModel.cs" />
-    <Compile Include="RequestModels\SystemDeleteRequestModel.cs" />
-    <Compile Include="RequestModels\SystemPartialUpdateRequestModel.cs" />
-    <Compile Include="RequestModels\SystemUpdateRequestModel.cs" />
-    <Compile Include="RequestModels\Validate\StringValidateUtil.cs" />
+    <Compile Remove="Models\Services\ActivityLogService.cs" />
+    <Compile Remove="Models\Services\ApplicationCharacteristicService.cs.cs" />
+    <Compile Remove="RequestModels\ActivityLogCreateRequestModel.cs" />
+    <Compile Remove="RequestModels\ActivityLogPartialUpdateRequestModel.cs" />
+    <Compile Remove="RequestModels\ActivityLogUpdateRequestModel.cs" />
+    <Compile Remove="RequestModels\ApplicationCharacteristicCreateRequestModel.cs" />
+    <Compile Remove="RequestModels\ApplicationCharacteristicPartialUpdateRequestModel.cs" />
+    <Compile Remove="RequestModels\ApplicationCharacteristicUpdateRequestModel.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="8.1.1" />
     <PackageReference Include="MailKit" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.6">
+    <PackageReference Include="Microsoft.AspNet.WebApi.Cors" Version="5.2.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.0">
       <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
@@ -109,7 +72,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Global\Gen\" />
     <Folder Include="Models\" />
   </ItemGroup>
 

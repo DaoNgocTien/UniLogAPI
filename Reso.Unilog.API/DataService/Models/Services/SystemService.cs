@@ -46,10 +46,10 @@ namespace DataService.Models.Services
                     }
 
 
-                    if (ref_fields.Contains("manage_project"))
-                    {
-                        list = list.Include(q => q.ManageProject);
-                    }
+                    //if (ref_fields.Contains("manage_project"))
+                    //{
+                    //    list = list.Include(q => q.ManageProject);
+                    //}
 
 
                     //if (ref_fields.Contains("system_instance"))
@@ -135,13 +135,12 @@ namespace DataService.Models.Services
                 {
                     return "Employee not exist";
                 }
-                var manageServer = _manageProjectRepository.Get().Where(p => p.AccountId == accountID && p.SystemsId == systemID).FirstOrDefault();
+                var manageServer = _manageProjectRepository.Get().Where(p => p.AccountId == accountID ).FirstOrDefault();
                 if (manageServer == null)
                 {
                     _manageProjectRepository.Create(new ManageProject
                     {
                         AccountId = accountID,
-                        SystemsId = systemID
                     });
                     _manageProjectRepository.SaveChanges();
                 }

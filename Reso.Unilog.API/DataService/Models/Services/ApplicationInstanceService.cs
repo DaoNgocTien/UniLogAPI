@@ -31,10 +31,10 @@ namespace DataService.Models.Services
                         list = list.Include(p => p.App);
                     }
                     
-                    if (ref_fields.Contains("activity_log"))
-                    {
-                        list = list.Include(p => p.ActivityLog);
-                    }
+                    //if (ref_fields.Contains("activity_log"))
+                    //{
+                    //    list = list.Include(p => p.ActivityLog);
+                    //}
 
                     if (ref_fields.Contains("log"))
                     {
@@ -70,7 +70,7 @@ namespace DataService.Models.Services
 
                     if (filter.account_id > 0)
                     {
-                        list = list.Where(p => p.App.Systems.ManageProject.Any(q => q.AccountId == filter.account_id));
+                        list = list.Where(p => p.ManageProject.Any(q => q.AccountId == filter.account_id));
                     }
                    
                 }
@@ -125,6 +125,28 @@ namespace DataService.Models.Services
                     _repo.SaveChanges();
 
                     return Mapper.Map<ApplicationInstance, ApplicationInstanceServiceModel>(currentAppIns);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return null;
+        }
+
+        public string ChangeStatus (int id)
+        {
+            try
+            {
+                var currentAppIns = _repo.GetActive().Where(appIns => appIns.Id == id).FirstOrDefault();
+                if (currentAppIns != null)
+                {
+                    currentAppIns.Active = !currentAppIns.Active;
+
+                    _repo.Update(currentAppIns);
+                    _repo.SaveChanges();
+                    return "Change Status successfully";
                 }
             }
             catch (Exception)

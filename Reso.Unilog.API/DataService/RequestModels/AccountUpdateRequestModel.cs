@@ -18,4 +18,14 @@ namespace DataService.RequestModels
         [JsonProperty("phone")]
         public  string Phone { get; set; }
     }
+
+    public class ProjectAssignment
+    {
+        [JsonProperty("id")]
+        public int Id { get; set; }
+        [JsonProperty("application_id")]
+        public int ApplicationId { get; set; }
+        [JsonProperty("Application_instance_id")]
+        public int ApplicationInstanceId { get; set; }
+    }
 }

@@ -21,11 +21,8 @@ namespace DataService.Global
 			//cfg =>
 			//{
 			//	cfg.CreateMap<Account, AccountServiceModel>().ReverseMap();
-			//	cfg.CreateMap<ActivityLog, ActivityLogServiceModel>().ReverseMap();
 			//	cfg.CreateMap<Application, ApplicationServiceModel>().ReverseMap();
-			//	cfg.CreateMap<ApplicationCharacteristic, ApplicationCharacteristicServiceModel>().ReverseMap();
 			//	cfg.CreateMap<ApplicationInstance, ApplicationInstanceServiceModel>().ReverseMap();
-			//	cfg.CreateMap<ApplicationRelation, ApplicationRelationServiceModel>().ReverseMap();
 			//	cfg.CreateMap<AspNetRoles, AspNetRolesServiceModel>().ReverseMap();
 			//	cfg.CreateMap<AspNetUserLogins, AspNetUserLoginsServiceModel>().ReverseMap();
 			//	cfg.CreateMap<AspNetUserRoles, AspNetUserRolesServiceModel>().ReverseMap();
@@ -64,11 +61,8 @@ namespace DataService.Global
 				.AddScoped<UnilogDevContext, UnitOfWork>()
 				.AddScoped<DbContext, UnitOfWork>()
 				.AddScoped<IAccountRepository, AccountRepository>()
-				.AddScoped<IActivityLogRepository, ActivityLogRepository>()
 				.AddScoped<IApplicationRepository, ApplicationRepository>()
-				.AddScoped<IApplicationCharacteristicRepository, ApplicationCharacteristicRepository>()
 				.AddScoped<IApplicationInstanceRepository, ApplicationInstanceRepository>()
-				.AddScoped<IApplicationRelationRepository, ApplicationRelationRepository>()
 				.AddScoped<IAspNetRolesRepository, AspNetRolesRepository>()
 				.AddScoped<IAspNetUserLoginsRepository, AspNetUserLoginsRepository>()
 				.AddScoped<IAspNetUserRolesRepository, AspNetUserRolesRepository>()

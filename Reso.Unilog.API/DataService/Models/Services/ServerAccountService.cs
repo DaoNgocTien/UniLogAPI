@@ -76,14 +76,19 @@ namespace DataService.Models.Services
         {
             try
             {
-                var result = _repo.GetActive().Where(p => p.Id == model.Id).FirstOrDefault();
-                if (result == null) return null;
+                var result = _repo.GetActive().Where(p => p.ServerId == model.ServerId).FirstOrDefault();
+                if (result == null) {
+                    return this.Create(new ServerAccountCreateRequestModel()
+                    {
+                        ServerId = model.ServerId,
+                        Password = model.Password,
+                        Username = model.Username
+                    });
+                }
                 else
                 {
                     result.Username = model.Username;
                     result.Password = model.Password;
-                    result.Owner = model.Owner;
-                    result.Note = model.Note;
                     result.Active = model.Active;
 
                     _repo.Update(result);

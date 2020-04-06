@@ -34,18 +34,16 @@ namespace DataService.Models.Repositories
 		IQueryable<E> AsNoTracking();
 		IQueryable<E> Get();
 		IQueryable<E> Get(Expression<Func<E, bool>> expr);
+		IQueryable<E> GetActive();
+		IQueryable<E> GetActive(Expression<Func<E, bool>> expr);
 		E FirstOrDefault();
 		E FirstOrDefault(Expression<Func<E, bool>> expr);
 		Task<E> FirstOrDefaultAsync();
 		Task<E> FirstOrDefaultAsync(Expression<Func<E, bool>> expr);
 		E SingleOrDefault(Expression<Func<E, bool>> expr);
 		Task<E> SingleOrDefaultAsync(Expression<Func<E, bool>> expr);
-		 IQueryable<E> GetActive();
-
-		 IQueryable<E> GetActive(Expression<Func<E, bool>> expr);
-
 	}
-
+	
 	public abstract partial class BaseRepository<E, K> : IBaseRepository<E, K> where E : class
 	{
 		protected DbContext context;
@@ -137,10 +135,10 @@ namespace DataService.Models.Repositories
 			return dbSet.AsNoTracking();
 		}
 		
-		public IQueryable<E> Get()
-		{
-			return dbSet;
-		}
+		//public IQueryable<E> Get()
+		//{
+		//	return dbSet;
+		//}
 		
 		public IQueryable<E> Get(Expression<Func<E, bool>> expr)
 		{
@@ -176,22 +174,32 @@ namespace DataService.Models.Repositories
 		{
 			return await dbSet.SingleOrDefaultAsync(expr);
 		}
-
+		
 		/*
 		********************* ABSTRACT AREA *********************
 		*/
+		
+		public abstract E FindById(K key);
+		public abstract Task<E> FindByIdAsync(K key);
+
+		//IQueryable<E> IBaseRepository<E, K>.Get()
+		//{
+		//	throw ;
+		//}
+
 		public virtual IQueryable<E> GetActive()
 		{
 			return dbSet;
 		}
 
-		public virtual IQueryable<E> GetActive(Expression<Func<E, bool>> expr)
+		public virtual	IQueryable<E> GetActive(Expression<Func<E, bool>> expr)
 		{
 			return dbSet.Where(expr);
 		}
 
-		public abstract E FindById(K key);
-		public abstract Task<E> FindByIdAsync(K key);
-		
+		public IQueryable<E> Get()
+		{
+			return dbSet;
+		}
 	}
 }

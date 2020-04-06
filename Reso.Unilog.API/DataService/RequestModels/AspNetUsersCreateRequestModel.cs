@@ -41,28 +41,17 @@ namespace DataService.RequestModels
         [JsonProperty("password")]
         public  string PasswordHash { get; set; }
 
-        private string normalizedUserName;
-        [JsonIgnore]
-        public  string NormalizedUserName { get => normalizedUserName; set => normalizedUserName = Name.ToUpper(); }       
-
-        private string normalizedEmail;
-        [JsonIgnore]
-        public  string NormalizedEmail { get => normalizedEmail; set => normalizedEmail = Email.ToUpper(); }
+        
 
         [JsonIgnore]
         public  bool EmailConfirmed { get; set; } = false;
-        [JsonIgnore]
-        public  string SecurityStamp { get; set; } = Guid.NewGuid().ToString();
-        [JsonIgnore]
-        public  string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
+        
         [JsonProperty("phone_number")]
         public  string PhoneNumber { get; set; }
-        [JsonIgnore]
-        public  bool PhoneNumberConfirmed { get; set; } = false;
+        
         [JsonIgnore]
         public  bool TwoFactorEnabled { get; set; } = false;
-        [JsonIgnore]
-        public  bool LockoutEnabled { get; set; } = true;
+        
         [JsonIgnore]
         public  int AccessFailedCount { get; set; } = 0;
         

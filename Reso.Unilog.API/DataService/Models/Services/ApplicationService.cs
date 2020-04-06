@@ -13,18 +13,20 @@ namespace DataService.Models.Services
     {
         ApplicationServiceModel CreateApp(ApplicationCreateRequestModel model);
         ApplicationServiceModel UpdateApp(ApplicationUpdateRequestModel model);
-        ApplicationServiceModel RemoveApp(int applicationId);
-        bool? RegisterService(int applicationServiceId, int applicationClientId);
-        bool? DeactiveService(int applicationServiceId, int applicationClientId);
+        ApplicationServiceModel ChangeStatus(int applicationId, bool active);
+        //bool? RegisterService(int applicationServiceId, int applicationClientId);
+        //bool? DeactiveService(int applicationServiceId, int applicationClientId);
     }
     public class ApplicationService : BaseService<ApplicationRepository, Application, ApplicationFilter, int, ApplicationServiceModel, ApplicationCreateRequestModel, ApplicationPartialUpdateRequestModel, ApplicationUpdateRequestModel>, IApplicationService
     {
-        private readonly ApplicationCharacteristicService _appCharacteristicService;
-        private readonly IApplicationRelationRepository _applicationRelationRepository;
-        public ApplicationService(IApplicationRelationRepository applicationRelationRepository, ApplicationRepository repo, ApplicationServiceModel model, ApplicationCharacteristicService appCharacteristicService) : base(repo, model)
+        private readonly SystemsRepository _systemsRepository;
+        public ApplicationService(
+            ApplicationRepository repo,
+            SystemsRepository systemsRepository,
+            ApplicationServiceModel model
+            ) : base(repo, model)
         {
-            _appCharacteristicService = appCharacteristicService;
-            _applicationRelationRepository = applicationRelationRepository;
+            _systemsRepository = systemsRepository;
         }
 
 
@@ -35,10 +37,10 @@ namespace DataService.Models.Services
                 if (ref_fields != null)
                 {
 
-                    if (ref_fields.Contains("application_characteristic"))
-                    {
-                        list = list.Include(p => p.ApplicationCharacteristic);
-                    }
+                    //if (ref_fields.Contains("application_characteristic"))
+                    //{
+                    //    list = list.Include(p => p.ApplicationCharacteristic);
+                    //}
 
                     if (ref_fields.Contains("systems"))
                     {
@@ -48,20 +50,11 @@ namespace DataService.Models.Services
                     if (ref_fields.Contains("application_instance"))
                     {
                         list = list.Include(p => p.ApplicationInstance);
-                    }                   
+                    }
 
                     if (ref_fields.Contains("repo"))
                     {
                         list = list.Include(p => p.Repo);
-                    }
-
-                    if (ref_fields.Contains("application_relation_client"))
-                    {
-                        list = list.Include(p => p.ApplicationRelationClient);
-                    }
-                    if (ref_fields.Contains("application_relation_service"))
-                    {
-                        list = list.Include(p => p.ApplicationRelationService);
                     }
                 }
             }
@@ -131,15 +124,15 @@ namespace DataService.Models.Services
             {
                 var application = this.Create(model);
 
-                if (application != null)
-                {
-                    var appCharacteristic = new ApplicationCharacteristicCreateRequestModel()
-                    {
-                        ApplicationId = application.Id,
-                        ActualEfford = null,
-                    };
-                    var characteristic = _appCharacteristicService.Create(appCharacteristic);
-                }
+                //if (application != null)
+                //{
+                //    var appCharacteristic = new ApplicationCharacteristicCreateRequestModel()
+                //    {
+                //        ApplicationId = application.Id,
+                //        ActualEfford = null,
+                //    };
+                //    var characteristic = _appCharacteristicService.Create(appCharacteristic);
+                //}
                 //if (model.IsService)
                 //{
                 //    _applicationRelationRepository.Create(new ApplicationRelation
@@ -164,7 +157,7 @@ namespace DataService.Models.Services
             try
             {
                 var app = _repo.GetActive().Where(p => p.Id == model.Id).FirstOrDefault();
-                //  var serviceRelation = _applicationRelationRepository.Get().Where(p => p.ServiceId == model.AddServiceId).FirstOrDefault();                
+                var system = _systemsRepository.GetActive().Where(s => s.Id == model.SystemsId).FirstOrDefault();
                 if (app == null) return null;
                 else
                 {
@@ -205,12 +198,14 @@ namespace DataService.Models.Services
                     app.Technologies = model.Technologies;
                     app.Priority = model.Priority;
                     app.Status = model.Status;
-                    app.IsDone = model.IsDone;
+                    app.IsDone = true;
                     //app.IsService = model.IsService;
                     app.SourceCodeUrl = model.SourceCodeUrl;
                     app.UpdateTime = model.UpdateTime;
                     app.StartDate = model.StartDate;
                     app.EndDate = model.EndDate;
+                    if (model.SystemsId > 0 && system != null)
+                        app.SystemsId = model.SystemsId;
                     //app.Link = model.Link;
 
                     _repo.Update(app);
@@ -229,19 +224,18 @@ namespace DataService.Models.Services
         }
 
 
-        public ApplicationServiceModel RemoveApp(int applicationId)
+        public ApplicationServiceModel ChangeStatus(int applicationId, bool active)
         {
             try
             {
                 var app = _repo.GetActive().Where(p => p.Id == applicationId).FirstOrDefault();
-                var appInService = _applicationRelationRepository.Get().Where(p => p.ServiceId == applicationId).FirstOrDefault();
-                if (app == null || appInService != null)
+                if (app == null)
                 {
                     return null;
                 }
                 else
                 {
-                    app.Active = false;
+                    app.Active = active;
                     _repo.Update(app);
                     _repo.SaveChanges();
                 }
@@ -253,67 +247,67 @@ namespace DataService.Models.Services
                 throw;
             }
         }
-        public bool? RegisterService(int applicationServiceId, int applicationClientId)
-        {
-            try
-            {
-                var appService = _repo.GetActive().Where(p => p.Id == applicationServiceId).FirstOrDefault();
-                //if (appService.IsService == null || !((bool)appService.IsService))
-                //{
-                //    return false;
-                //}
-                if (appService == null)
-                {
-                    return null;
-                }
-                var appClient = _repo.GetActive().Where(p => p.Id == applicationClientId).FirstOrDefault();
-                if (appClient == null)
-                {
-                    return null;
-                }
+        //public bool? RegisterService(int applicationServiceId, int applicationClientId)
+        //{
+        //    try
+        //    {
+        //        var appService = _repo.GetActive().Where(p => p.Id == applicationServiceId).FirstOrDefault();
+        //        //if (appService.IsService == null || !((bool)appService.IsService))
+        //        //{
+        //        //    return false;
+        //        //}
+        //        if (appService == null)
+        //        {
+        //            return null;
+        //        }
+        //        var appClient = _repo.GetActive().Where(p => p.Id == applicationClientId).FirstOrDefault();
+        //        if (appClient == null)
+        //        {
+        //            return null;
+        //        }
 
 
-                _applicationRelationRepository.Create(new ApplicationRelation
-                {
-                    ServiceId = applicationServiceId,
-                    ClientId = applicationClientId
-                });
-                _applicationRelationRepository.SaveChanges();
+        //        _applicationRelationRepository.Create(new ApplicationRelation
+        //        {
+        //            ServiceId = applicationServiceId,
+        //            ClientId = applicationClientId
+        //        });
+        //        _applicationRelationRepository.SaveChanges();
 
-                return true;
-            }
-            catch (Exception)
-            {
+        //        return true;
+        //    }
+        //    catch (Exception)
+        //    {
 
-                throw;
-            }
-        }
-        public bool? DeactiveService(int applicationServiceId, int applicationClientId)
-        {
-            try
-            {
-                var appService = _repo.GetActive().Where(p => p.Id == applicationServiceId).FirstOrDefault();
-                var appClient = _repo.GetActive().Where(p => p.Id == applicationClientId).FirstOrDefault();
-                var serviceRelation = _applicationRelationRepository.Get().Where(p => p.ClientId == applicationClientId && p.ServiceId == applicationServiceId).FirstOrDefault();
-                //if (appService.IsService == null || !((bool)appService.IsService))
-                //{
-                //    return false;
-                //}
-                if (appService == null || appClient == null || serviceRelation == null)
-                {
-                    return null;
-                }
+        //        throw;
+        //    }
+        //}
+        //public bool? DeactiveService(int applicationServiceId, int applicationClientId)
+        //{
+        //    try
+        //    {
+        //        var appService = _repo.GetActive().Where(p => p.Id == applicationServiceId).FirstOrDefault();
+        //        var appClient = _repo.GetActive().Where(p => p.Id == applicationClientId).FirstOrDefault();
+        //        var serviceRelation = _applicationRelationRepository.Get().Where(p => p.ClientId == applicationClientId && p.ServiceId == applicationServiceId).FirstOrDefault();
+        //        //if (appService.IsService == null || !((bool)appService.IsService))
+        //        //{
+        //        //    return false;
+        //        //}
+        //        if (appService == null || appClient == null || serviceRelation == null)
+        //        {
+        //            return null;
+        //        }
 
 
-                _applicationRelationRepository.Remove(serviceRelation);
-                _applicationRelationRepository.SaveChanges();
-                return true;
-            }
-            catch (Exception)
-            {
+        //        _applicationRelationRepository.Remove(serviceRelation);
+        //        _applicationRelationRepository.SaveChanges();
+        //        return true;
+        //    }
+        //    catch (Exception)
+        //    {
 
-                throw;
-            }
-        }
+        //        throw;
+        //    }
+        //}
     }
 }

@@ -20,11 +20,5 @@ namespace DataService.RequestModels.CreateRequestModels
         [DataType(DataType.Text)]
         [JsonProperty("password")]
         public  string Password { get; set; }
-        [Required(ErrorMessage = "Required")]
-        [JsonProperty("owner")]
-        [DataType(DataType.Text)]
-        public  string Owner { get; set; }
-        [JsonProperty("note")]
-        public  string Note { get; set; }
     }
 }

@@ -10,9 +10,7 @@ namespace DataService.RequestModels
     {
 
         [JsonProperty("email")]
-        public  string Email { get; set; }
-        //[JsonProperty("company_id")]
-        //public  int CompanyId { get; set; }        
+        public  string Email { get; set; }       
         [JsonProperty("address")]
         public  string Address { get; set; }
         [JsonIgnore]

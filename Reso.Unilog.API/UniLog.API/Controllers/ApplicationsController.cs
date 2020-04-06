@@ -74,14 +74,14 @@ namespace UniLog.API.Controllers
         {
             try
             {
-                if (model.SourceCodeUrl != null && !Uri.TryCreate(model.SourceCodeUrl, UriKind.Relative, out Uri source_code_url))
-                {
-                    return BadRequest(new { error = "SourceCodeUrl is wrong format!" });
-                }
-                if (model.Link != null && !Uri.TryCreate(model.Link, UriKind.Relative, out Uri link))
-                {
-                    return BadRequest(new { error = "Link is wrong format!" });
-                }
+                //if (model.SourceCodeUrl != null && !Uri.TryCreate(model.SourceCodeUrl, UriKind.Relative, out Uri source_code_url))
+                //{
+                //    return BadRequest(new { error = "SourceCodeUrl is wrong format!" });
+                //}
+                //if (model.Link != null && !Uri.TryCreate(model.Link, UriKind.Relative, out Uri link))
+                //{
+                //    return BadRequest(new { error = "Link is wrong format!" });
+                //}
                 var application = _service.CreateApp(model);
                 if (application == null)
                 {
@@ -104,11 +104,20 @@ namespace UniLog.API.Controllers
             {
                 if (model.SourceCodeUrl != null && !Uri.TryCreate(model.SourceCodeUrl, UriKind.Relative, out Uri source_code_url))
                 {
-                    return BadRequest(new { error = "SourceCodeUrl is wrong format!" });
+                    return BadRequest(new { error = "Source Code Url is wrong format!" });
                 }
-                if (model.Link != null && !Uri.TryCreate(model.Link, UriKind.Relative, out Uri link))
+                //if (model.Link != null && !Uri.TryCreate(model.Link, UriKind.Relative, out Uri link))
+                //{
+                //    return BadRequest(new { error = "Link is wrong format!" });
+                //}
+                ApplicationFilter filter = new ApplicationFilter()
                 {
-                    return BadRequest(new { error = "Link is wrong format!" });
+                    ids = model.Id + ""
+                };
+                var applicationtList = _service.Get(filter);
+                if (applicationtList == null || applicationtList.Count() == 0)
+                {
+                    return NotFound(model);
                 }
                 var result = _service.UpdateApp(model);
                 if (result == null)
@@ -126,8 +135,8 @@ namespace UniLog.API.Controllers
 
 
         [HttpPatch]
-        [Route("deactivation")]
-        public IActionResult Deactivation([FromQuery] int id)
+        [Route("status_changing")]
+        public IActionResult ChangeStatus([FromQuery] int id, [FromQuery] bool active)
         {
             try
             {
@@ -140,7 +149,7 @@ namespace UniLog.API.Controllers
                 {
                     return NotFound();
                 }
-                var result = _service.RemoveApp(id);
+                var result = _service.ChangeStatus(id, active);
                 if (result == null)
                 {
                     return BadRequest("This application is still in service mode of other applications, please contact GM");
@@ -153,53 +162,53 @@ namespace UniLog.API.Controllers
                 return StatusCode(503, e);
             }
         }
-        [HttpPatch]
-        [Route("service_registration")]
-        public IActionResult Register(ApplicationPartialUpdateRequestModel model)
-        {
-            try
-            {
-                var result = _service.RegisterService(model.ServiceId, model.ClientId);
-                if (result == null)
-                {
-                    return BadRequest("Client / service application not exist");
-                }
-                if (!((bool)result))
-                {
-                    return BadRequest("This application is not service");
-                }
-                return Ok(result);
-            }
-            catch (System.Exception e)
-            {
-                try { _logService.SendLogError(e); } catch (System.Exception ex) { return StatusCode(503, ex); }
-                return StatusCode(503, e);
-            }
-        }
-        [HttpPatch]
-        [Route("service_deactivation")]
-        public IActionResult DeactiveService(ApplicationPartialUpdateRequestModel model)
-        {
-            try
-            {
-                var result = _service.DeactiveService(model.ServiceId, model.ClientId);
-                if (result == null)
-                {
-                    return BadRequest("Client / service application not exist \n Or \n This service not exist");
-                }
-                if (!((bool)result))
-                {
-                    return BadRequest("This application is not service");
-                }
-                return Ok("Service remove successfully");
-            }
-            catch (System.Exception e)
-            {
-                try { _logService.SendLogError(e); } catch (System.Exception ex) { return StatusCode(503, ex); }
-                return StatusCode(503, e);
-            }
+        //[HttpPatch]
+        //[Route("service_registration")]
+        //public IActionResult Register(ApplicationPartialUpdateRequestModel model)
+        //{
+        //    try
+        //    {
+        //        var result = _service.RegisterService(model.ServiceId, model.ClientId);
+        //        if (result == null)
+        //        {
+        //            return BadRequest("Client / service application not exist");
+        //        }
+        //        if (!((bool)result))
+        //        {
+        //            return BadRequest("This application is not service");
+        //        }
+        //        return Ok(result);
+        //    }
+        //    catch (System.Exception e)
+        //    {
+        //        try { _logService.SendLogError(e); } catch (System.Exception ex) { return StatusCode(503, ex); }
+        //        return StatusCode(503, e);
+        //    }
+        //}
+        //[HttpPatch]
+        //[Route("service_deactivation")]
+        //public IActionResult DeactiveService(ApplicationPartialUpdateRequestModel model)
+        //{
+        //    try
+        //    {
+        //        var result = _service.DeactiveService(model.ServiceId, model.ClientId);
+        //        if (result == null)
+        //        {
+        //            return BadRequest("Client / service application not exist \n Or \n This service not exist");
+        //        }
+        //        if (!((bool)result))
+        //        {
+        //            return BadRequest("This application is not service");
+        //        }
+        //        return Ok("Service remove successfully");
+        //    }
+        //    catch (System.Exception e)
+        //    {
+        //        try { _logService.SendLogError(e); } catch (System.Exception ex) { return StatusCode(503, ex); }
+        //        return StatusCode(503, e);
+        //    }
 
-        }
+        //}
 
     }
 }

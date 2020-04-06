@@ -8,8 +8,6 @@ namespace DataService.Models
         public Application()
         {
             ApplicationInstance = new HashSet<ApplicationInstance>();
-            ApplicationRelationClient = new HashSet<ApplicationRelation>();
-            ApplicationRelationService = new HashSet<ApplicationRelation>();
             ManageProject = new HashSet<ManageProject>();
             Repo = new HashSet<Repo>();
         }
@@ -37,10 +35,7 @@ namespace DataService.Models
         public bool Active { get; set; }
 
         public virtual Systems Systems { get; set; }
-        public virtual ApplicationCharacteristic ApplicationCharacteristic { get; set; }
         public virtual ICollection<ApplicationInstance> ApplicationInstance { get; set; }
-        public virtual ICollection<ApplicationRelation> ApplicationRelationClient { get; set; }
-        public virtual ICollection<ApplicationRelation> ApplicationRelationService { get; set; }
         public virtual ICollection<ManageProject> ManageProject { get; set; }
         public virtual ICollection<Repo> Repo { get; set; }
     }

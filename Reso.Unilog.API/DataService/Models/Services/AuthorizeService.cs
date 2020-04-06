@@ -20,11 +20,19 @@ namespace DataService.Models.Services
         private readonly AppSettings _appSettings;
         private IAspNetUsersRepository _aspNetUsersRepository;
         private IAspNetUserTokensRepository _aspNetUserTokensRepository;
-        public AuthorizeService(IOptions<AppSettings> appSettings, IAspNetUsersRepository aspNetUsersRepository, IAspNetUserTokensRepository aspNetUserTokensRepository)
+        private IAspNetUserLoginsRepository _aspNetUserLoginsRepository;
+
+        public AuthorizeService(
+            IOptions<AppSettings> appSettings, 
+            IAspNetUsersRepository aspNetUsersRepository, 
+            IAspNetUserTokensRepository aspNetUserTokensRepository,
+            IAspNetUserLoginsRepository aspNetUserLoginsRepository
+            )
         {
             _appSettings = appSettings.Value;
             _aspNetUsersRepository = aspNetUsersRepository;
             _aspNetUserTokensRepository = aspNetUserTokensRepository;
+            _aspNetUserLoginsRepository = aspNetUserLoginsRepository;
         }
 
         public string GetLoginProvider(string email, string password)
@@ -73,7 +81,25 @@ namespace DataService.Models.Services
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
                 };
                 var token = tokenHandler.CreateToken(tokenDescriptor);
-                user.SecurityStamp = tokenHandler.WriteToken(token);
+
+                //  JWT is written into AspNetUserLogins.LoginProvider
+                var loginToken = _aspNetUserLoginsRepository.GetActive().Where(x => x.UserId == user.Id).FirstOrDefault();
+                if(loginToken == null)
+                {
+                    AspNetUserLogins login = new AspNetUserLogins
+                    {
+                        ProviderDisplayName = "Jwt is not existed",
+                        LoginProvider = tokenHandler.WriteToken(token),
+                        UserId = user.Id
+                    };
+                    _aspNetUserLoginsRepository.Create(login);
+                  
+                }
+                else
+                {
+                    loginToken.LoginProvider = tokenHandler.WriteToken(token);
+                }
+                _aspNetUserLoginsRepository.SaveChanges();
 
                 return true;
             }

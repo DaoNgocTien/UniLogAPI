@@ -25,8 +25,6 @@ namespace DataService.ServiceModels
 		public DateTime? UpdateTime { get; set; }
 		[JsonProperty("application")]
 		public IEnumerable<ApplicationServiceModel> Application { get; set; }
-		[JsonProperty("manage_project")]
-		public IEnumerable<ManageProjectServiceModel> ManageProject { get; set; }
 		
 		public SystemsServiceModel(Systems entity) : base(entity)
 		{
@@ -54,8 +52,6 @@ namespace DataService.ServiceModels
 		public Wrapper<DateTime?> UpdateTime { get; set; }
 		[JsonProperty("application")]
 		public IEnumerable<ApplicationServiceModel> Application { get; set; }
-		[JsonProperty("manage_project")]
-		public IEnumerable<ManageProjectServiceModel> ManageProject { get; set; }
 		
 	}
 }

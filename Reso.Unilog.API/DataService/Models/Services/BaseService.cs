@@ -107,7 +107,7 @@ namespace DataService.Models.Services
         {
             try
             {
-                var rs = _repo.GetActive();
+                var rs = _repo.Get();
                 if (filter != null)
                 {
                     #region Handle Ids
@@ -195,13 +195,13 @@ namespace DataService.Models.Services
         //  public JsonSerializerSettings ToJson(string fields)
         //{
         //    var jsonResolver = new PropertyRenameAndIgnoreSerializerContractResolver();            
-        //    var jsonProperty = _model.GetType().GetProperties()
-        //         .SelectMany(p => p.GetCustomAttributes(typeof(JsonPropertyAttribute))
-        //                           .Cast<JsonPropertyAttribute>())
+        //    var[JsonProperty = _model.GetType().GetProperties()
+        //         .SelectMany(p => p.GetCustomAttributes(typeof([JsonPropertyAttribute))
+        //                           .Cast<[JsonPropertyAttribute>())
         //         .Select(jp => jp.PropertyName);
         //    if (!string.IsNullOrEmpty(fields))
         //    {
-        //        foreach (var item in jsonProperty)
+        //        foreach (var item in[JsonProperty)
         //        {
         //            if (!fields.Contains(item))
         //            {
@@ -240,23 +240,25 @@ namespace DataService.Models.Services
 
         public IQueryable<E> GetByMinCreateTime(IQueryable<E> list, DateTime create_at_min)
         {
-            if (typeof(IGetting).IsAssignableFrom(typeof(E)))
-            {
-                Expression<Func<E, bool>> node = (E q) => ((IGetting)q).CreateTime >= create_at_min;
-                node = (Expression<Func<E, bool>>)RemoveCastsVisitor.Visit(node);
-                return Queryable.Where<E>(list, node);
-            }
+            //  not usable now
+            //if (typeof(IGetting).IsAssignableFrom(typeof(E)))
+            //{
+            //    Expression<Func<E, bool>> node = (E q) => ((IGetting)q).CreateTime >= create_at_min;
+            //    node = (Expression<Func<E, bool>>)RemoveCastsVisitor.Visit(node);
+            //    return Queryable.Where<E>(list, node);
+            //}
             return list;
         }
 
         public IQueryable<E> GetByMaxCreateTime(IQueryable<E> list, DateTime create_at_max)
         {
-            if (typeof(IGetting).IsAssignableFrom(typeof(E)))
-            {
-                Expression<Func<E, bool>> node = (E q) => ((IGetting)q).CreateTime <= create_at_max;
-                node = (Expression<Func<E, bool>>)RemoveCastsVisitor.Visit(node);
-                return Queryable.Where<E>(list, node);
-            }
+            //  not usable now
+            //if (typeof(IGetting).IsAssignableFrom(typeof(E)))
+            //{
+            //    Expression<Func<E, bool>> node = (E q) => ((IGetting)q).CreateTime <= create_at_max;
+            //    node = (Expression<Func<E, bool>>)RemoveCastsVisitor.Visit(node);
+            //    return Queryable.Where<E>(list, node);
+            //}
             return list;
         }
 

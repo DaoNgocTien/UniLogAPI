@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using DataService.Global;
 using System.Reflection;
+using DataService.Models.Gen;
 
 namespace DataService.ServiceModels
 {
-	public partial interface IServiceModel
+	public partial interface IServiceModel:IGetting
 	{
 		void CopyFrom(object src);
 		void CopyTo(object dest);
@@ -33,7 +34,8 @@ namespace DataService.ServiceModels
 		}
 		
 		protected E Entity { get; set; }
-		
+		public int Id { get ; set ; }
+
 		public virtual void FromEntity(E entity)
 		{
 			Entity = entity;

@@ -9,7 +9,5 @@ namespace DataService.RequestModelss
         public  readonly bool Active = true;
         public  readonly DateTime UpdateTime = DateTime.UtcNow.AddHours(7);
         public  readonly int? Efford = null;
-        public  readonly int? Team = null;
-        public  readonly string SourceCodeUrl  = null;
     }
 }

@@ -16,11 +16,8 @@ namespace DataService.Models
         }
 
         public virtual DbSet<Account> Account { get; set; }
-        public virtual DbSet<ActivityLog> ActivityLog { get; set; }
         public virtual DbSet<Application> Application { get; set; }
-        public virtual DbSet<ApplicationCharacteristic> ApplicationCharacteristic { get; set; }
         public virtual DbSet<ApplicationInstance> ApplicationInstance { get; set; }
-        public virtual DbSet<ApplicationRelation> ApplicationRelation { get; set; }
         public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
         public virtual DbSet<AspNetUserLogins> AspNetUserLogins { get; set; }
         public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
@@ -40,13 +37,13 @@ namespace DataService.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=localhost; Database=UniLogDev; Trusted_Connection = True;User Id=saisam;Password=Katie123;");
+                optionsBuilder.UseSqlServer("Server=localhost; Database=UniLogDev; Trusted_Connection = True;User Id=kachy;Password=091217;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
+            modelBuilder.HasAnnotation("ProductVersion", "2.2.0-rtm-35687");
 
             modelBuilder.Entity<Account>(entity =>
             {
@@ -79,59 +76,6 @@ namespace DataService.Models
                     .WithOne(p => p.Account)
                     .HasForeignKey<Account>(d => d.AspNetUserId)
                     .HasConstraintName("FK_Account_AspNetUsers");
-            });
-
-            modelBuilder.Entity<ActivityLog>(entity =>
-            {
-                entity.HasIndex(e => e.AppCode);
-
-                entity.Property(e => e.ActionName)
-                    .IsRequired()
-                    .IsUnicode(false);
-
-                entity.Property(e => e.AppCode)
-                    .IsRequired()
-                    .HasMaxLength(256)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Browser)
-                    .IsRequired()
-                    .IsUnicode(false);
-
-                entity.Property(e => e.BrowserVersion)
-                    .IsRequired()
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Device)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.IpAddress)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Location)
-                    .IsRequired()
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Os)
-                    .IsRequired()
-                    .HasColumnName("OS")
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Path)
-                    .IsRequired()
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Time).HasColumnType("datetime");
-
-                entity.HasOne(d => d.AppCodeNavigation)
-                    .WithMany(p => p.ActivityLog)
-                    .HasPrincipalKey(p => p.AppCode)
-                    .HasForeignKey(d => d.AppCode)
-                    .HasConstraintName("FK_ActivityLog_ApplicationInstance");
             });
 
             modelBuilder.Entity<Application>(entity =>
@@ -174,18 +118,6 @@ namespace DataService.Models
                     .HasConstraintName("FK_Application_Systems");
             });
 
-            modelBuilder.Entity<ApplicationCharacteristic>(entity =>
-            {
-                entity.HasIndex(e => e.ApplicationId)
-                    .HasName("UQ_ApplicationId")
-                    .IsUnique();
-
-                entity.HasOne(d => d.Application)
-                    .WithOne(p => p.ApplicationCharacteristic)
-                    .HasForeignKey<ApplicationCharacteristic>(d => d.ApplicationId)
-                    .HasConstraintName("FK_ApplicationCharacteristic_Application");
-            });
-
             modelBuilder.Entity<ApplicationInstance>(entity =>
             {
                 entity.HasIndex(e => e.AppCode)
@@ -226,24 +158,9 @@ namespace DataService.Models
                     .HasConstraintName("FK_ApplicationInstance_Application");
             });
 
-            modelBuilder.Entity<ApplicationRelation>(entity =>
-            {
-                entity.HasOne(d => d.Client)
-                    .WithMany(p => p.ApplicationRelationClient)
-                    .HasForeignKey(d => d.ClientId)
-                    .HasConstraintName("FK_ApplicationRelation_Application");
-
-                entity.HasOne(d => d.Service)
-                    .WithMany(p => p.ApplicationRelationService)
-                    .HasForeignKey(d => d.ServiceId)
-                    .HasConstraintName("FK_ApplicationRelation_Application1");
-            });
-
             modelBuilder.Entity<AspNetRoles>(entity =>
             {
                 entity.Property(e => e.Name).HasMaxLength(256);
-
-                entity.Property(e => e.NormalizedName).HasMaxLength(256);
             });
 
             modelBuilder.Entity<AspNetUserLogins>(entity =>
@@ -342,9 +259,6 @@ namespace DataService.Models
 
             modelBuilder.Entity<ManageProject>(entity =>
             {
-                entity.HasIndex(e => e.SystemsId)
-                    .HasName("IX_ApplicationAccountMapping_ApplicationId");
-
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.ManageProject)
                     .HasForeignKey(d => d.AccountId)
@@ -360,12 +274,6 @@ namespace DataService.Models
                     .WithMany(p => p.ManageProject)
                     .HasForeignKey(d => d.ApplicationInstanceId)
                     .HasConstraintName("FK_ManageProject_ApplicationInstance");
-
-                entity.HasOne(d => d.Systems)
-                    .WithMany(p => p.ManageProject)
-                    .HasForeignKey(d => d.SystemsId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ManageProject_Systems1");
             });
 
             modelBuilder.Entity<Repo>(entity =>
@@ -445,10 +353,6 @@ namespace DataService.Models
 
             modelBuilder.Entity<ServerAccount>(entity =>
             {
-                entity.Property(e => e.Note).IsUnicode(false);
-
-                entity.Property(e => e.Owner).IsUnicode(false);
-
                 entity.Property(e => e.Password)
                     .IsRequired()
                     .IsUnicode(false);

@@ -19,7 +19,7 @@ namespace DataService.Models.Services
         LoginResponseModel Login(AuthorizeLoginModel loginModel);
         string GetResetToken(string email);
         bool CheckValidEmail(string email);
-        string AddEmployee(int accountID, int systemID);
+        string AddEmployee(ProjectAssignment model);
         string ChangePassword(PasswordModel passwordModel);
     }
     public class AccountService : BaseService<AccountRepository, Account, AccountFilter, int, AccountServiceModel, AuthorizeRegisterModel, AccountUpdateRequestModel, AccountServiceModel>, IAccountService
@@ -32,11 +32,24 @@ namespace DataService.Models.Services
         private readonly AspNetUserRolesRepository _aspNetUserRolesRepository;
         private readonly IAuthorizeService _IAuthorizeService;
         private readonly IManageProjectRepository _manageProjectRepository;
-        private readonly ISystemsRepository _systemsRepository;
-        public AccountService(IManageProjectRepository manageProjectRepository, ISystemsRepository systemsRepository, AspNetUsersRepository aspNetUsersRepository, AspNetUserRolesRepository aspNetUserRolesRepository, AspNetUserTokensRepository aspNetUserTokensRepo, /*ResoUserIntManager userManager*/ LogService logService, AspNetUsersService aspNetUsersService, AccountRepository repo, AccountServiceModel model, IAuthorizeService IAuthorizeService) : base(repo, model)
+        private readonly IApplicationInstanceRepository _applicationInstanceRepository;
+        private readonly IApplicationRepository _applicationRepository;
+        public AccountService(
+            IManageProjectRepository manageProjectRepository,
+            IApplicationInstanceRepository applicationInstanceRepository,
+            IApplicationRepository applicationRepository,
+            AspNetUsersRepository aspNetUsersRepository,
+            AspNetUserRolesRepository aspNetUserRolesRepository,
+            AspNetUserTokensRepository aspNetUserTokensRepo, /*ResoUserIntManager userManager*/
+            LogService logService,
+            AspNetUsersService aspNetUsersService,
+            AccountRepository repo,
+            AccountServiceModel model,
+            IAuthorizeService IAuthorizeService) : base(repo, model)
         {
             _aspNetUserRolesRepository = aspNetUserRolesRepository;
-            _systemsRepository = systemsRepository;
+            _applicationRepository = applicationRepository;
+            _applicationInstanceRepository = applicationInstanceRepository;
             _manageProjectRepository = manageProjectRepository;
             _aspNetUsersRepository = aspNetUsersRepository;
             _aspNetUserTokensRepo = aspNetUserTokensRepo;
@@ -76,9 +89,9 @@ namespace DataService.Models.Services
             {
                 if (!string.IsNullOrEmpty(ref_fields))
                 {
-                    if (ref_fields.Contains("id_asp_net_user"))
+                    if (ref_fields.Contains("asp_net_user"))
                     {
-                        list = list.Include(p => p.AspNetUserId);
+                        list = list.Include(p => p.AspNetUser);
                     }
                     if (ref_fields.Contains("manage_project"))
                     {
@@ -123,7 +136,8 @@ namespace DataService.Models.Services
                 }
                 var result = new LoginResponseModel();
                 result.Id = account.Id;
-                result.Token = aspUser.SecurityStamp;
+                //  get JWT from AspNetUserLogins.LoginProvider
+                result.Token = (aspUser.AspNetUserLogins.FirstOrDefault()).LoginProvider;
                 result.Role = account.Role;
                 result.Email = account.Email;
                 return result;
@@ -154,14 +168,14 @@ namespace DataService.Models.Services
                 {
                     if (requestModel.IsAdmin)
                     {
-                        requestModel.Role = 2;
+                        requestModel.Role = 1;
                     }
                     else
-                        requestModel.Role = 3;
+                        requestModel.Role = 2;
                 }
                 else
                 {
-                    requestModel.Role = 1;
+                    requestModel.Role = requestModel.Role == 3 ? requestModel.Role : requestModel.Role == 4 ? requestModel.Role : 5;
                 }
 
 
@@ -169,28 +183,26 @@ namespace DataService.Models.Services
                 UniLogUtil utils = new UniLogUtil();
                 var accountNetUser = Mapper.Map<AuthorizeRegisterModel, AspNetUsersCreateRequestModel>(requestModel);
                 accountNetUser.PasswordHash = utils.GetMd5HashData(requestModel.Password);
-                accountNetUser.NormalizedUserName = accountNetUser.Name.ToUpper();
-                accountNetUser.NormalizedEmail = accountNetUser.Email.ToUpper();
-                accountNetUser.NormalizedUserName = accountNetUser.Name.ToUpper();
                 accountNetUser.PhoneNumber = requestModel.Phone;
 
                 var aspNetUser = _aspNetUsersService.Create(accountNetUser);
 
-                //  Create AspNetUserTokens
-                AspNetUserTokens aspToken = new AspNetUserTokens()
-                {
-                    UserId = aspNetUser.Id,
-                    Name = aspNetUser.Name,
-                    LoginProvider = _aspNetUsersService.CreateToken(aspNetUser.Email)
-                };
-                _aspNetUserTokensRepo.Create(aspToken);
-                _aspNetUserTokensRepo.SaveChanges();
+                //  Create AspNetUserTokens => token for reset password
+                //AspNetUserTokens aspToken = new AspNetUserTokens()
+                //{
+                //    UserId = aspNetUser.Id,
+                //    Name = aspNetUser.Name == null ? aspNetUser.Email: aspNetUser.Name,
+                //    LoginProvider = _aspNetUsersService.CreateToken(aspNetUser.Email)
+                //};
+                //_aspNetUserTokensRepo.Create(aspToken);
+                //_aspNetUserTokensRepo.SaveChanges();
 
                 //  Create AspNetUsersRoles
                 AspNetUserRoles aspUserRoles = new AspNetUserRoles()
                 {
                     UserId = aspNetUser.Id,
-                    RoleId = requestModel.Role
+                    RoleId = requestModel.Role,
+                    
                 };
                 _aspNetUserRolesRepository.Create(aspUserRoles);
                 _aspNetUserRolesRepository.SaveChanges();
@@ -223,8 +235,9 @@ namespace DataService.Models.Services
                 }
                 if (CheckValidEmail(email))
                 {
-                    return null;
-                }
+                    String a = "aa";
+                    int aa = int.Parse(a);
+                 }
                 //  Modify list email send
                 List<EmailAddress> fromEmail = new List<EmailAddress>();
                 fromEmail.Add(new EmailAddress()
@@ -308,12 +321,13 @@ namespace DataService.Models.Services
                 var user = _repo.GetActive().Where(p => p.Email == passwordModel.Email).FirstOrDefault();
                 if (user == null)
                 {
-                    return "";
+                    return null;
                 }
 
                 bool? result;
-                //  Reset password
-                if (string.IsNullOrEmpty(passwordModel.Token))
+                //  Request has token => Reset password 
+                //  User forgot password
+                if (!string.IsNullOrEmpty(passwordModel.Token))
                 {
                     result = _aspNetUsersService.ResetPassword(passwordModel);
                     if (result == null)
@@ -322,15 +336,20 @@ namespace DataService.Models.Services
                     }
                     if (!(bool)result)
                     {
-                        return "Invalid token";
+                        return "Invalid token / confirm password not match";
                     }
                 }
-                //  Change Password
+                //  Request has no token => Change Password
+                //  User change to new password from old password
                 else
                 {
-                    if (string.IsNullOrEmpty(passwordModel.CurrentPassword))
+                    //if (string.IsNullOrEmpty(passwordModel.CurrentPassword))
+                    //{
+                    //    return null;
+                    //}
+                    if (passwordModel.NewPassword != passwordModel.ConfirmPassword)
                     {
-                        return null;
+                        return "Confirm password not match";
                     }
                     result = _aspNetUsersService.ChangePassword(new AspNetUsersPartialUpdateRequestModel()
                     {
@@ -379,31 +398,71 @@ namespace DataService.Models.Services
         #endregion
 
         #region Add Employee to System
-        public string AddEmployee(int accountID, int systemID)
+        public string AddEmployee(ProjectAssignment model)
         {
             try
             {
-                var systems = _systemsRepository.GetActive().Where(p => p.Id == systemID).FirstOrDefault();
-                if (systems == null)
-                {
-                    return "System not exist";
-                }
-                var employee = _repo.GetActive().Where(p => p.Id == accountID).FirstOrDefault();
+                var employee = _repo.GetActive().Include(p => p.ManageProject).Where(p => p.Id == model.Id).FirstOrDefault();
                 if (employee == null)
                 {
                     return "Employee not exist";
                 }
-                var manageServer = _manageProjectRepository.Get().Where(p => p.AccountId == accountID && p.SystemsId == systemID).FirstOrDefault();
-                if (manageServer == null)
+                if (model.ApplicationId > 0)
                 {
+                    var application = _applicationRepository.GetActive().Where(p => p.Id == model.ApplicationId).FirstOrDefault();
+                    if (application == null)
+                    {
+                        return "Application not exist";
+                    }
+                    foreach (var p in employee.ManageProject)
+                    {
+                        if (p.ApplicationId == model.ApplicationId &&
+                         p.AccountId == model.Id &&
+                         p.ApplicationInstanceId == 22)
+                        {
+                            _manageProjectRepository.Remove(p.Id);
+                            _manageProjectRepository.SaveChanges();
+                            return "Remove Manager from project successfully";
+                        }
+                    }
                     _manageProjectRepository.Create(new ManageProject
                     {
-                        AccountId = accountID,
-                        SystemsId = systemID
+                        AccountId = model.Id,
+                        ApplicationId = model.ApplicationId,
+                        ApplicationInstanceId = 22
                     });
                     _manageProjectRepository.SaveChanges();
+                    return "Add Manager into project successfully";
                 }
-                return "Add employee into system successfully";
+                else if (model.ApplicationInstanceId > 0)
+                {
+                    var applicationInstance = _applicationInstanceRepository.GetActive().Where(p => p.Id == model.ApplicationInstanceId).FirstOrDefault();
+                    if (applicationInstance == null)
+                    {
+                        return "Application Instance not exist";
+                    }
+                    foreach (var p in employee.ManageProject)
+                    {
+                        if (p.ApplicationId == 22 &&
+                         p.AccountId == model.Id &&
+                         p.ApplicationInstanceId == model.ApplicationInstanceId)
+                        {
+                            _manageProjectRepository.Remove(p.Id);
+                            _manageProjectRepository.SaveChanges();
+                            return "Remove employee from project successfully";
+                        }
+                    }
+                    _manageProjectRepository.Create(new ManageProject
+                    {
+                        AccountId = model.Id,
+                        ApplicationId = 22,
+                        ApplicationInstanceId = model.ApplicationInstanceId
+                    });
+                    _manageProjectRepository.SaveChanges();
+                    return "Add employee into project successfully";
+                }
+                return "Please recorrect application / application instance";
+
             }
             catch (Exception)
             {

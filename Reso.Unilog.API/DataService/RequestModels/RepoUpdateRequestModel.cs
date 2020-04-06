@@ -9,8 +9,8 @@ namespace DataService.RequestModels
      public  class RepoUpdateRequestModel
     {
         [Required(ErrorMessage = "Required")]
-        [JsonProperty("id")]
-        public  int Id { get; set; }
+        [JsonProperty("server_id")]
+        public int ServerId { get; set; }
         [Required(ErrorMessage = "Required")]
         [JsonProperty("name")]
         [DataType(DataType.Text)]
@@ -27,7 +27,5 @@ namespace DataService.RequestModels
         [JsonProperty("note")]
         [StringLength(200, MinimumLength = 5, ErrorMessage = "Note Should be minimum 5 and a maximum is 200")]
         public  string Note { get; set; }
-        [JsonProperty("active")]
-        public  bool Active { get; set; }
     }
 }

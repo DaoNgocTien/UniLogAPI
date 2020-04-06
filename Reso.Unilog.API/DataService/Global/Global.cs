@@ -22,18 +22,18 @@ namespace DataService.Global
                 cfg.CreateMap<Account, AuthorizeRegisterModel>().ReverseMap();
                 cfg.CreateMap<AuthorizeRegisterModel, AspNetUsersCreateRequestModel>().ReverseMap();
 
-                cfg.CreateMap<ActivityLog, ActivityLogServiceModel>().ReverseMap();
-                cfg.CreateMap<ActivityLog, ActivityLogCreateRequestModel>().ReverseMap();
+                //cfg.CreateMap<ActivityLog, ActivityLogServiceModel>().ReverseMap();
+                //cfg.CreateMap<ActivityLog, ActivityLogCreateRequestModel>().ReverseMap();
 
                 //cfg.CreateMap<Actor, ActorServiceModel>().ReverseMap();
 
                 cfg.CreateMap<Application, ApplicationServiceModel>().ReverseMap();
                 cfg.CreateMap<Application, ApplicationCreateRequestModel>().ReverseMap();
 
-                cfg.CreateMap<ApplicationCharacteristic, ApplicationCharacteristicServiceModel>().ReverseMap();
-                cfg.CreateMap<ApplicationCharacteristic, ApplicationCharacteristicCreateRequestModel>().ReverseMap();
+                //cfg.CreateMap<ApplicationCharacteristic, ApplicationCharacteristicServiceModel>().ReverseMap();
+                //cfg.CreateMap<ApplicationCharacteristic, ApplicationCharacteristicCreateRequestModel>().ReverseMap();
 
-                cfg.CreateMap<ApplicationRelation, ApplicationRelationServiceModel>().ReverseMap();
+                //cfg.CreateMap<ApplicationRelation, ApplicationRelationServiceModel>().ReverseMap();
 
                 cfg.CreateMap<ApplicationInstance, ApplicationInstanceServiceModel>().ReverseMap();
                 cfg.CreateMap<ApplicationInstance, ApplicationInstanceCreateRequestModel>().ReverseMap();
@@ -91,8 +91,8 @@ namespace DataService.Global
 
                 cfg.CreateMap<ServerAccount, ServerAccountServiceModel>().ReverseMap();
 
+                cfg.CreateMap<ServerDetail, ServerDetailUpdateRequestModel>().ReverseMap();
                 cfg.CreateMap<ServerDetail, ServerDetailServiceModel>().ReverseMap();
-                cfg.CreateMap<ServerDetail, ServerDetailCreateRequestModel>().ReverseMap();
 
                 cfg.CreateMap<ServerAccount, ServerAccountCreateRequestModel>().ReverseMap();
 

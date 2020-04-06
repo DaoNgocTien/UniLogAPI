@@ -1,5 +1,6 @@
 
-﻿using Newtonsoft.Json;
+using DataService.ServiceModels;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,6 +15,11 @@ namespace DataService.RequestModels
         [JsonProperty("id")]
         public  int Id { get; set; }
         [JsonProperty("active")]
-        public  bool Active { get; set; }
+        public bool Active { get; set; }
+        [JsonProperty("change_status")]
+        public bool ChangeStatus { get; set; }
+        [JsonProperty("server_detail")]
+        public ServerDetailUpdateRequestModel ServerDetail { get; set; }
+
     }
 }

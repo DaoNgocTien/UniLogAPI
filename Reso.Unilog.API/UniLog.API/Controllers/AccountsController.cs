@@ -38,8 +38,8 @@ namespace UniLog.API.Controllers
             }
             catch (System.Exception e)
             {
-               try { _logService.SendLogError(e); } catch (System.Exception ex) { return StatusCode(503, ex.Message); } 
-                
+                try { _logService.SendLogError(e); } catch (System.Exception ex) { return StatusCode(503, ex.Message); }
+
                 return StatusCode(503, e);
             }
         }
@@ -69,7 +69,7 @@ namespace UniLog.API.Controllers
             }
         }
 
-        
+
 
         [HttpPost]
         [Route("register")]
@@ -82,7 +82,7 @@ namespace UniLog.API.Controllers
                 {
                     return BadRequest(new { error = "Email existed" });
                 }
-                if(model.Password != model.ConfirmPassword)
+                if (model.Password != model.ConfirmPassword)
                 {
                     return BadRequest(new { error = "Password not match" });
                 }
@@ -122,7 +122,7 @@ namespace UniLog.API.Controllers
             }
         }
 
-    [HttpPost]
+        [HttpPost]
         [Route("reset")]
         [AllowAnonymous]
         public IActionResult Reset(string email)
@@ -150,16 +150,16 @@ namespace UniLog.API.Controllers
 
 
         [HttpPut]
-        public IActionResult Update (AccountUpdateRequestModel model)
+        public IActionResult Update(AccountUpdateRequestModel model)
         {
             try
             {
-                if(model == null)
+                if (model == null)
                 {
                     BadRequest(new { error = "Invalid account" });
                 }
                 var result = _service.Update(model);
-                if(model == null)
+                if (model == null)
                 {
                     BadRequest(new { error = "Invalid account" });
                 }
@@ -175,6 +175,8 @@ namespace UniLog.API.Controllers
 
 
         [HttpPatch]
+
+        [AllowAnonymous]
         [Route("password_changing")]
         public IActionResult ChangePassword(PasswordModel passwordModel)
         {
@@ -188,7 +190,7 @@ namespace UniLog.API.Controllers
                 if (result != "Change password successfully")
                 {
                     return BadRequest(result);
-                }                
+                }
                 return Ok(result);
             }
             catch (System.Exception e)
@@ -202,16 +204,16 @@ namespace UniLog.API.Controllers
 
         [HttpPatch]
         [Route("employee_assignment")]
-        public IActionResult AddEmployeeToSystem(int employee_id, int system_id)
+        public IActionResult AddEmployeeToSystem(ProjectAssignment model)
         {
             try
             {
-                var result = _service.AddEmployee(employee_id, system_id);
-                if (result.Contains("Successfully"))
+                var result = _service.AddEmployee(model);
+                if (result.Contains("successfully"))
                 {
                     return Ok(result);
                 }
-                    return BadRequest(result);
+                return BadRequest(result);
             }
             catch (System.Exception e)
             {

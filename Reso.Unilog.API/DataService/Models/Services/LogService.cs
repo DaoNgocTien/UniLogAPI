@@ -39,13 +39,9 @@ namespace DataService.Models.Services
                     {
                         list = list.Where(p => p.AppCode == filter.app_code);
                     }
-                    if (filter.log_type > 0)
+                    if (filter.serverity > 0)
                     {
-                        list = list.Where(p => p.LogType == filter.log_type);
-                    }
-                    if (filter.active != null)
-                    {
-                        list = list.Where(p => p.LogType == filter.log_type);
+                        list = list.Where(p => p.LogType == filter.serverity);
                     }
                 }
                 return list;
@@ -147,7 +143,7 @@ namespace DataService.Models.Services
                 LogErrorCreateRequestModel error = new LogErrorCreateRequestModel()
                 {
                     Exception = e,
-                    AppCode = "1OIH4DA4",
+                    AppCode = "Kachy",
                     Serverity = 5
                 };
                 LogCreateRequestModel createError = ParseExceptionToExceptionModel(error);

@@ -15,10 +15,6 @@ namespace DataService.ServiceModels
 		public int Id { get; set; }
 		[JsonProperty("active")]
 		public bool Active { get; set; }
-		[JsonProperty("note")]
-		public string Note { get; set; }
-		[JsonProperty("owner")]
-		public string Owner { get; set; }
 		[JsonProperty("password")]
 		public string Password { get; set; }
 		[JsonProperty("server_id")]
@@ -44,10 +40,6 @@ namespace DataService.ServiceModels
 		public Wrapper<int> Id { get; set; }
 		[JsonProperty("active")]
 		public Wrapper<bool> Active { get; set; }
-		[JsonProperty("note")]
-		public Wrapper<string> Note { get; set; }
-		[JsonProperty("owner")]
-		public Wrapper<string> Owner { get; set; }
 		[JsonProperty("password")]
 		public Wrapper<string> Password { get; set; }
 		[JsonProperty("server_id")]

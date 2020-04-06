@@ -48,6 +48,17 @@ namespace UniLog.API.Controllers
         {
             try
             {
+                var listApplicationInstance = _service.Get(new ApplicationInstanceFilter()
+                {
+                    app_code = model.AppCode
+                });
+                foreach (ApplicationInstanceServiceModel appIns in listApplicationInstance)
+                {
+                    if (appIns.AppCode == model.AppCode)
+                    {
+                        return BadRequest(new { error = "App Code existed" });
+                    }
+                }
                 var result = _service.Create(model);
                 if (result == null)
                 {
@@ -66,10 +77,43 @@ namespace UniLog.API.Controllers
         {
             try
             {
+                var listApplicationInstance = _service.Get(new ApplicationInstanceFilter()
+                {
+                    app_code = model.AppCode
+
+                });
+                foreach (ApplicationInstanceServiceModel appIns in listApplicationInstance)
+                {
+                    if (appIns.AppCode == model.AppCode && appIns.Id != model.Id)
+                    {
+                        return BadRequest(new { error = "App Code existed" });
+                    }
+                }
                 var result = _service.Update(model);
                 if (result == null)
                 {
                     return BadRequest(model);
+                }
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                try { _logService.SendLogError(e); } catch (System.Exception ex) { return StatusCode(503, ex); }
+                return StatusCode(503, e);
+            }
+        }
+
+        [HttpPatch]
+        [Route("status_changing")]
+        public IActionResult ChangeStatus([FromQuery] int id)
+        {
+            try
+            {
+              
+                var result = _service.ChangeStatus(id);
+                if (result == null)
+                {
+                    return BadRequest("Application Instance is not existed");
                 }
                 return Ok(result);
             }

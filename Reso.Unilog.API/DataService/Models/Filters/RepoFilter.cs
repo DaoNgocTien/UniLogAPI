@@ -9,7 +9,7 @@ namespace DataService.Models.Filters
     {
         public int server_id { get; set; }
         public int application_id { get; set; }
-        //public int? company_id { get; set; }
+     
        public string name { get; set; }
     }
 }

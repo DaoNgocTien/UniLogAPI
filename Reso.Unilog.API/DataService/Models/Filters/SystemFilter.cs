@@ -8,7 +8,7 @@ namespace DataService.Models.Filters
 {
     public class SystemFilter : BaseFilter
     {
-        //public int company_id { get; set; }
+        public int company_id { get; set; }
         public string name { get; set; }
         public bool active { get; set; }
     }

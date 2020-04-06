@@ -13,7 +13,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\ActivityLogsController.cs" />
     <Compile Remove="Controllers\ActorsController.cs" />
+    <Compile Remove="Controllers\ApplicationCharacteristicsController.cs" />
     <Compile Remove="Controllers\ApplicationScreensController.cs" />
     <Compile Remove="Controllers\CompaniesController.cs" />
     <Compile Remove="Controllers\DevOpsesController.cs" />
@@ -25,6 +27,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="8.1.1" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Cors" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />

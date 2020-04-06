@@ -17,7 +17,7 @@ namespace DataService.RequestModels.CreateRequestModels
         [Required(ErrorMessage = "Required")]
         [JsonProperty("server_id")]
         public  int ServerId { get; set; }
-
+        [Required(ErrorMessage = "Required")]
         [JsonProperty("application_id")]
         public  int? ApplicationId { get; set; }
 

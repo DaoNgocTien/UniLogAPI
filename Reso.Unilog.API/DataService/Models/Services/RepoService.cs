@@ -15,6 +15,7 @@ namespace DataService.Models.Services
     public interface IRepoService : IBaseService<RepoRepository, Repo, RepoFilter, int, RepoServiceModel, RepoCreateRequestModel, RepoPartialUpdateRequestModel, RepoUpdateRequestModel>
     {
         RepoServiceModel UpdateRepo(RepoUpdateRequestModel model);
+        String Remove(int appID, int serverID);
     }
         public class RepoService : BaseService<RepoRepository, Repo, RepoFilter, int, RepoServiceModel, RepoCreateRequestModel, RepoPartialUpdateRequestModel, RepoUpdateRequestModel>, IRepoService
     {
@@ -97,15 +98,27 @@ namespace DataService.Models.Services
         {
             try
             {
-                var repo = _repo.GetActive().Where(p => p.Id == model.Id).FirstOrDefault();
-                if (repo == null) return null;
+                var repo = _repo.GetActive().Where(p => p.ServerId == model.ServerId && p.ApplicationId == model.ApplicationId).FirstOrDefault();
+                //  create new repo
+                if (repo == null) {
+                    return this.Create(new RepoCreateRequestModel()
+                    {
+                        ApplicationId = model.ApplicationId,
+                        Name = model.Name,
+                        Note= model.Note,
+                        RepoUrl = model.RepoUrl,
+                        ServerId = model.ServerId
+                    });
+                }
+                //  update current repo
                 else
                 {
                     repo.Name = model.Name;
                     repo.ApplicationId = model.ApplicationId;
+                    repo.ServerId = model.ServerId;
                     repo.RepoUrl = model.RepoUrl;
                     repo.Note = model.Note;
-                    repo.Active = model.Active;
+                    repo.Active = true;
 
                     _repo.Update(repo);
                     _repo.SaveChanges();
@@ -117,6 +130,22 @@ namespace DataService.Models.Services
 
                 throw;
             }
+        }
+
+        public string Remove (int appID, int serverID)
+        {
+            try
+            {
+                var currentRepo = _repo.GetActive().Where(r => r.ApplicationId == appID && r.ServerId == serverID).FirstOrDefault();
+                _repo.Remove(currentRepo);
+                _repo.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return "Remove Repo successfully";
         }
     }
 }

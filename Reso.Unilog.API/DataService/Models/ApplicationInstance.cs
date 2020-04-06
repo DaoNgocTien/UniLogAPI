@@ -7,7 +7,6 @@ namespace DataService.Models
     {
         public ApplicationInstance()
         {
-            ActivityLog = new HashSet<ActivityLog>();
             Log = new HashSet<Log>();
             ManageProject = new HashSet<ManageProject>();
         }
@@ -25,7 +24,6 @@ namespace DataService.Models
         public DateTime? CreateTime { get; set; }
 
         public virtual Application App { get; set; }
-        public virtual ICollection<ActivityLog> ActivityLog { get; set; }
         public virtual ICollection<Log> Log { get; set; }
         public virtual ICollection<ManageProject> ManageProject { get; set; }
     }

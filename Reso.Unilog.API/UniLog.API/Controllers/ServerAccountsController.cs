@@ -17,10 +17,12 @@ namespace UniLog.API.Controllers
     public class ServerAccountsController : ControllerBase
     {
         private ServerAccountService _service;
-        private LogService _logService; 
-        public ServerAccountsController(LogService logservice, ServerAccountService service)
+        private LogService _logService;
+        private ServerService _serverService;
+        public ServerAccountsController(LogService logservice, ServerAccountService service, ServerService serverService)
         {
             _service = service;_logService = logservice;
+            _serverService = serverService;
         }
 
 
@@ -41,21 +43,21 @@ namespace UniLog.API.Controllers
         }
 
 
-        [HttpPost]
-        public IActionResult Post(ServerAccountCreateRequestModel model)
-        {
-            try
-            {
-                var result = _service.Create(model);
-                if (result == null) return BadRequest(model);
-                return Ok(result);
-            }
-            catch (Exception e)
-            {
-                try { _logService.SendLogError(e); } catch (System.Exception ex) { return StatusCode(503, ex); }
-                return StatusCode(503, e);
-            }
-        }
+        //[HttpPost]
+        //public IActionResult Post(ServerAccountCreateRequestModel model)
+        //{
+        //    try
+        //    {
+        //        var result = _service.Create(model);
+        //        if (result == null) return BadRequest(model);
+        //        return Ok(result);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        try { _logService.SendLogError(e); } catch (System.Exception ex) { return StatusCode(503, ex); }
+        //        return StatusCode(503, e);
+        //    }
+        //}
 
 
         [HttpPut]
@@ -63,6 +65,14 @@ namespace UniLog.API.Controllers
         {
             try
             {
+                ServerFilter filter = new ServerFilter()
+                {
+                    ids = model.ServerId + ""
+                };
+                if (_serverService.GetById(filter) == null)
+                {
+                    return NotFound("Server is not exist");
+                }
                 var result = _service.UpdateServerAccount(model);
                 if (result == null) return BadRequest(model);
                 return Ok(result);

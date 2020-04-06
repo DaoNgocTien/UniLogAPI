@@ -19,16 +19,12 @@ namespace DataService.ServiceModels
 		public int? ApplicationId { get; set; }
 		[JsonProperty("application_instance_id")]
 		public int? ApplicationInstanceId { get; set; }
-		[JsonProperty("systems_id")]
-		public int SystemsId { get; set; }
 		[JsonProperty("account")]
 		public AccountServiceModel Account { get; set; }
 		[JsonProperty("application")]
 		public ApplicationServiceModel Application { get; set; }
 		[JsonProperty("application_instance")]
 		public ApplicationInstanceServiceModel ApplicationInstance { get; set; }
-		[JsonProperty("systems")]
-		public SystemsServiceModel Systems { get; set; }
 		
 		public ManageProjectServiceModel(ManageProject entity) : base(entity)
 		{
@@ -50,16 +46,12 @@ namespace DataService.ServiceModels
 		public Wrapper<int?> ApplicationId { get; set; }
 		[JsonProperty("application_instance_id")]
 		public Wrapper<int?> ApplicationInstanceId { get; set; }
-		[JsonProperty("systems_id")]
-		public Wrapper<int> SystemsId { get; set; }
 		[JsonProperty("account")]
 		public AccountServiceModel Account { get; set; }
 		[JsonProperty("application")]
 		public ApplicationServiceModel Application { get; set; }
 		[JsonProperty("application_instance")]
 		public ApplicationInstanceServiceModel ApplicationInstance { get; set; }
-		[JsonProperty("systems")]
-		public SystemsServiceModel Systems { get; set; }
 		
 	}
 }

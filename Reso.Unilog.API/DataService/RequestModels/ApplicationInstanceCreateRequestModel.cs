@@ -10,9 +10,7 @@ namespace DataService.RequestModels
 {
     public  class ApplicationInstanceCreateRequestModel : AppInstanceCreateRequestModel
     {
-        [Required(ErrorMessage = "Required")]
-        [JsonProperty("system_instance_id")]
-        public  int SystemInstanceId { get; set; }
+
         [Required(ErrorMessage = "Required")]
         [JsonProperty("app_code")]
         [StringLength(200, MinimumLength = 5, ErrorMessage = "Application Instance Name Should be minimum 5 and a maximum is 200")]
@@ -26,11 +24,6 @@ namespace DataService.RequestModels
         [StringLength(200, MinimumLength = 5, ErrorMessage = "Application Instance Name Should be minimum 5 and a maximum is 200")]
         [DataType(DataType.Text)]
         public  string Name { get; set; }
-        [Required(ErrorMessage = "Required")]
-        [JsonProperty("description")]
-        [StringLength(300, MinimumLength = 5, ErrorMessage = "Description Name Should be minimum 5 and a maximum is 300")]
-        [DataType(DataType.Text)]
-        public  string Description { get; set; }
 
       
 

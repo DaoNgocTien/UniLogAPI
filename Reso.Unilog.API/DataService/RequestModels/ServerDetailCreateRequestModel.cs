@@ -13,10 +13,6 @@ namespace DataService.RequestModels
         public  string Disk2 { get; set; }
         [JsonProperty("disk3")]
         public  string Disk3 { get; set; }
-        [JsonProperty("log_event")]
-        public  string LogEvent { get; set; }
-        [JsonProperty("notification")]
-        public  string Notification { get; set; }
         [JsonProperty("server_id")]
         public  int ServerId { get; set; }
         [JsonProperty("volume_disk1")]

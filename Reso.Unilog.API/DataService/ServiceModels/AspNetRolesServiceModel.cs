@@ -13,12 +13,8 @@ namespace DataService.ServiceModels
 	{
 		[JsonProperty("id")]
 		public int Id { get; set; }
-		[JsonProperty("concurrency_stamp")]
-		public string ConcurrencyStamp { get; set; }
 		[JsonProperty("name")]
 		public string Name { get; set; }
-		[JsonProperty("normalized_name")]
-		public string NormalizedName { get; set; }
 		[JsonProperty("asp_net_user_roles")]
 		public IEnumerable<AspNetUserRolesServiceModel> AspNetUserRoles { get; set; }
 		
@@ -36,12 +32,8 @@ namespace DataService.ServiceModels
 	{
 		[JsonProperty("id")]
 		public Wrapper<int> Id { get; set; }
-		[JsonProperty("concurrency_stamp")]
-		public Wrapper<string> ConcurrencyStamp { get; set; }
 		[JsonProperty("name")]
 		public Wrapper<string> Name { get; set; }
-		[JsonProperty("normalized_name")]
-		public Wrapper<string> NormalizedName { get; set; }
 		[JsonProperty("asp_net_user_roles")]
 		public IEnumerable<AspNetUserRolesServiceModel> AspNetUserRoles { get; set; }
 		

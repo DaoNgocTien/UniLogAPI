@@ -9,8 +9,8 @@ namespace DataService.RequestModels
     public  class ServerAccountUpdateRequestModel
     {
         [Required(ErrorMessage = "Required")]
-        [JsonProperty("id")]
-        public  int Id { get; set; }
+        [JsonProperty("server_id")]
+        public int ServerId { get; set; }
         [Required(ErrorMessage = "Required")]
         [DataType(DataType.Text)]
         [JsonProperty("username")]
@@ -20,13 +20,6 @@ namespace DataService.RequestModels
         [DataType(DataType.Text)]
         [JsonProperty("password")]
         public  string Password { get; set; }
-        [Required(ErrorMessage = "Required")]
-        [JsonProperty("owner")]
-        [DataType(DataType.Text)]
-        public  string Owner { get; set; }
-        [JsonProperty("note")]
-        public  string Note { get; set; }
-        [JsonProperty("active")]
-        public  bool Active { get; set; }
+        public readonly bool Active = true;
     }
 }

@@ -13,7 +13,7 @@ namespace DataService.RequestModels
         [JsonProperty("id")]
         public  int Id { get; set; }
         [JsonProperty("server_master")]
-        [Range(1, 4, ErrorMessage = "Server Master should be between 1 and 3")]
+        //[Range(1, 4, ErrorMessage = "Server Master should be between 1 and 3")]
         public  int? ServerMaster { get; set; }
 
         [Required(ErrorMessage = "Required")]
@@ -47,10 +47,6 @@ namespace DataService.RequestModels
         public  readonly DateTime? UpdateTime = DateTime.UtcNow.AddHours(7);
         [JsonProperty("server_code")]
         public  string ServerCode { get; set; }
-
-        [JsonProperty("server_detail")]
-
-        public  ServerDetailUpdateRequestModel ServerDetail { get; set; }
        
     }
 }

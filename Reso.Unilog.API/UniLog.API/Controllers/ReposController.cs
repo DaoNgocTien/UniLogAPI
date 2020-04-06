@@ -12,16 +12,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace UniLog.API.Controllers
 {
-    [Authorize][Route("api/repos")]
+    [Authorize]
+    [Route("api/repos")]
     [ApiController]
     public class ReposController : ControllerBase
     {
         private RepoService _service;
-        private LogService _logService; 
+        private LogService _logService;
 
         public ReposController(LogService logservice, RepoService service)
         {
-            _service = service;_logService = logservice;
+            _service = service; _logService = logservice;
         }
 
 
@@ -68,6 +69,21 @@ namespace UniLog.API.Controllers
             {
                 var result = _service.UpdateRepo(model);
                 if (result == null) return null;
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                try { _logService.SendLogError(e); } catch (System.Exception ex) { return StatusCode(503, ex); }
+                return StatusCode(503, e);
+            }
+        }
+
+        [HttpDelete]
+        public IActionResult Remove([FromQuery] int appID, [FromQuery] int serverID)
+        {
+            try
+            {
+                var result = _service.Remove(appID, serverID);
                 return Ok(result);
             }
             catch (Exception e)

@@ -11,7 +11,5 @@ namespace DataService.RequestModels
         public  string Name { get; set; }
         [JsonProperty("description")]
         public  string Description { get; set; }
-        //[JsonProperty("company_id")]
-        //public  int CompanyId { get; set; }
     }
 }

@@ -15,8 +15,6 @@ namespace DataService.ServiceModels
 		public int Id { get; set; }
 		[JsonProperty("access_failed_count")]
 		public int AccessFailedCount { get; set; }
-		[JsonProperty("concurrency_stamp")]
-		public string ConcurrencyStamp { get; set; }
 		[JsonProperty("email")]
 		public string Email { get; set; }
 		[JsonProperty("email_confirmed")]
@@ -27,10 +25,6 @@ namespace DataService.ServiceModels
 		public string PasswordHash { get; set; }
 		[JsonProperty("phone_number")]
 		public string PhoneNumber { get; set; }
-		[JsonProperty("phone_number_confirmed")]
-		public bool PhoneNumberConfirmed { get; set; }
-		[JsonProperty("security_stamp")]
-		public string SecurityStamp { get; set; }
 		[JsonProperty("two_factor_enabled")]
 		public bool TwoFactorEnabled { get; set; }
 		[JsonProperty("account")]
@@ -58,8 +52,6 @@ namespace DataService.ServiceModels
 		public Wrapper<int> Id { get; set; }
 		[JsonProperty("access_failed_count")]
 		public Wrapper<int> AccessFailedCount { get; set; }
-		[JsonProperty("concurrency_stamp")]
-		public Wrapper<string> ConcurrencyStamp { get; set; }
 		[JsonProperty("email")]
 		public Wrapper<string> Email { get; set; }
 		[JsonProperty("email_confirmed")]
@@ -70,10 +62,6 @@ namespace DataService.ServiceModels
 		public Wrapper<string> PasswordHash { get; set; }
 		[JsonProperty("phone_number")]
 		public Wrapper<string> PhoneNumber { get; set; }
-		[JsonProperty("phone_number_confirmed")]
-		public Wrapper<bool> PhoneNumberConfirmed { get; set; }
-		[JsonProperty("security_stamp")]
-		public Wrapper<string> SecurityStamp { get; set; }
 		[JsonProperty("two_factor_enabled")]
 		public Wrapper<bool> TwoFactorEnabled { get; set; }
 		[JsonProperty("account")]

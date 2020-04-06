@@ -13,8 +13,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.Swagger;
+using System;
 using System.Text;
 
 namespace UniLog.API
@@ -31,13 +33,20 @@ namespace UniLog.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(p => p.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-         
+            services.AddCors(c => c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin()
+                                                 .AllowAnyMethod()
+                                                 //.AllowAnyHeader()
+                                                 //.AllowCredentials()
+                                                 ));
+            //services.AddCors(); 
+           
+
             #region Authorization Token
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(p => p.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             // configure jwt authentication
             var appSettings = appSettingsSection.Get<AppSettings>();
@@ -77,9 +86,9 @@ namespace UniLog.API
             services.AddScoped<SystemsRepository>();
 
 
-            services.AddScoped<ApplicationCharacteristicService>();
-            services.AddScoped<ApplicationCharacteristicServiceModel>();
-            services.AddScoped<ApplicationCharacteristicRepository>();
+            //services.AddScoped<ApplicationCharacteristicService>();
+            //services.AddScoped<ApplicationCharacteristicServiceModel>();
+            //services.AddScoped<ApplicationCharacteristicRepository>();
 
             services.AddScoped<LogService>();
             services.AddScoped<LogServiceModel>();
@@ -98,9 +107,9 @@ namespace UniLog.API
             services.AddScoped<AuthorizeLoginModel>();
             services.AddScoped<PasswordModel>();
 
-            services.AddScoped<ActivityLogService>();
-            services.AddScoped<ActivityLogServiceModel>();
-            services.AddScoped<ActivityLogRepository>();
+            //services.AddScoped<ActivityLogService>();
+            //services.AddScoped<ActivityLogServiceModel>();
+            //services.AddScoped<ActivityLogRepository>();
 
             //services.AddScoped<EcfServiceModel>();
             //services.AddScoped<EcfRepository>();
@@ -147,19 +156,19 @@ namespace UniLog.API
             services.AddScoped<ServerDetailServiceModel>();
             services.AddScoped<ServerDetailRepository>();
 
-         //   services.AddScoped<UseCaseService>();
-         //   services.AddScoped<UseCaseServiceModel>();
-         //   services.AddScoped<UseCaseRepository>();
+            //   services.AddScoped<UseCaseService>();
+            //   services.AddScoped<UseCaseServiceModel>();
+            //   services.AddScoped<UseCaseRepository>();
 
 
 
-         ////   services.AddScoped<UseCaseStepService>();
-         //   services.AddScoped<UseCaseStepServiceModel>();
-         //   services.AddScoped<UseCaseStepRepository>();
+            ////   services.AddScoped<UseCaseStepService>();
+            //   services.AddScoped<UseCaseStepServiceModel>();
+            //   services.AddScoped<UseCaseStepRepository>();
 
 
-         //   services.AddScoped<UseCaseStepServiceModel>();
-         //   services.AddScoped<UseCaseStepRepository>();
+            //   services.AddScoped<UseCaseStepServiceModel>();
+            //   services.AddScoped<UseCaseStepRepository>();
 
 
             //services.AddScoped<UseCaseActorServiceModel>();
@@ -238,30 +247,43 @@ namespace UniLog.API
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                //app.UseDeveloperExceptionPage();
             }
             else
             {
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            
+           //app.UseCors(builder => builder
+           //                                 .AllowAnyOrigin()
+           //                                 .AllowAnyMethod()
+           //                                 .AllowAnyHeader()
+           //                                 .AllowCredentials());
             app.UseStaticFiles();
-            app.UseHttpsRedirection();
-
+            app.UseHttpsRedirection();                           
             app.UseAuthentication();
-            app.UseCors(builder => builder
-                                               .AllowAnyOrigin()
-                                               .AllowAnyMethod()
-                                               .AllowAnyHeader()
-                                               .AllowCredentials());
+
+
+
+            // app.UseCors(policy =>
+            //    policy.WithHeaders(HeaderNames.Authorization)
+            //    .SetIsOriginAllowedToAllowWildcardSubdomains()
+            //    .AllowAnyOrigin()
+            //    .SetPreflightMaxAge(TimeSpan.FromDays(1))
+            //);
+            app.UseCors("AllowOrigin");
+
+            app.UseMvc();
+            // Enable middleware to serve generated Swagger as a JSON endpoint
             app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui assets (HTML, JS, CSS etc.)
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 c.RoutePrefix = string.Empty;
             });
-            // app.UseHttpsRedirection();
-            app.UseMvc();
         }
     }
 }

@@ -16,10 +16,10 @@ namespace DataService.Models.Services
     public class ServerService : BaseService<ServerRepository, Server, ServerFilter, int, ServerServiceModel, ServerCreateRequestModel, ServerUpdateRequestModel, ServerPartialUpdateRequestModel>, IServerService
     {
         //private readonly ICompanyRepository _companyRepository;
-        
         public ServerService(
             //ICompanyRepository companyRepository, 
-            ServerRepository repo, ServerServiceModel model) : base(repo, model)
+            ServerRepository repo,
+            ServerServiceModel model) : base(repo, model)
         {
             //_companyRepository = companyRepository;
         }
@@ -109,7 +109,7 @@ namespace DataService.Models.Services
         {
             try
             {
-                var server = _repo.GetActive().Where(p => p.Id == requestModel.Id).FirstOrDefault();
+                var server = _repo.Get().Where(p => p.Id == requestModel.Id).FirstOrDefault();
                 if (server == null)
                 {
                     return null;
@@ -117,6 +117,8 @@ namespace DataService.Models.Services
                 server.Active = requestModel.Active;
                 _repo.Update(server);
                 _repo.SaveChanges();
+
+                
                 return AutoMapper.Mapper.Map<Server, ServerServiceModel>(server);
             }
             catch (Exception)
@@ -135,7 +137,7 @@ namespace DataService.Models.Services
                 //{
                 //    return null;
                 //}
-                var existServer = _repo.GetActive().Where(p => p.Name == requestModel.Name).FirstOrDefault();
+                var existServer = _repo.Get().Where(p => p.Name == requestModel.Name).FirstOrDefault();
                 if (existServer != null)
                 {
                     return null;
@@ -156,12 +158,12 @@ namespace DataService.Models.Services
         {
             try
             {
-                var server = _repo.GetActive().Where(p => p.Id == requestModel.Id).FirstOrDefault();
+                var server = _repo.Get().Where(p => p.Id == requestModel.Id).FirstOrDefault();
                 if (server == null)
                 {
                     return null;
                 }
-                server.ServerMaster = requestModel.ServerMaster;
+                server.ServerMaster = requestModel.ServerMaster != 0 ? requestModel.ServerMaster : null;
                 server.Name = requestModel.Name;
                 server.IpAddress = requestModel.IpAddress;
                 server.Type = requestModel.Type;

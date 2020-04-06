@@ -117,44 +117,44 @@ namespace UniLog.API.Controllers
 
 
 
-        [HttpPatch]
-       [Route("deactivation")]
-        public IActionResult Deactivation(SystemDeleteRequestModel model)
-        {
-            try
-            {
-                var result = _service.RemoveSystem(model);
-                if(result == null)
-                {
-                    return BadRequest("Something is wrong !! you can check it again, please !!");
-                }
-                return Ok(result);
-            }
-            catch (Exception e)
-            {
-                try { _logService.SendLogError(e); } catch (System.Exception ex) { return StatusCode(503, ex.Message); }
-                return StatusCode(503, e);
-            }
-        }
+       // [HttpPatch]
+       //[Route("deactivation")]
+       // public IActionResult Deactivation(SystemDeleteRequestModel model)
+       // {
+       //     try
+       //     {
+       //         var result = _service.RemoveSystem(model);
+       //         if(result == null)
+       //         {
+       //             return BadRequest("Something is wrong !! you can check it again, please !!");
+       //         }
+       //         return Ok(result);
+       //     }
+       //     catch (Exception e)
+       //     {
+       //         try { _logService.SendLogError(e); } catch (System.Exception ex) { return StatusCode(503, ex.Message); }
+       //         return StatusCode(503, e);
+       //     }
+       // }
 
-        [HttpPatch]
-        [Route("employee_assignment")]
-        public IActionResult AddEmployeeToSystem(int employee_id, int system_id)
-        {
-            try
-            {
-                var result = _service.AddEmployee(employee_id, system_id);
-                if (result.Contains("Successfully"))
-                {
-                    return Ok(result);
-                }
-                return BadRequest(result);
-            }
-            catch (System.Exception e)
-            {
-                try { _logService.SendLogError(e); } catch (System.Exception ex) { return StatusCode(503, ex.Message); }
-                return StatusCode(503, e);
-            }
-        }
+       // [HttpPatch]
+       // [Route("employee_assignment")]
+       // public IActionResult AddEmployeeToSystem(int employee_id, int system_id)
+       // {
+       //     try
+       //     {
+       //         var result = _service.AddEmployee(employee_id, system_id);
+       //         if (result.Contains("Successfully"))
+       //         {
+       //             return Ok(result);
+       //         }
+       //         return BadRequest(result);
+       //     }
+       //     catch (System.Exception e)
+       //     {
+       //         try { _logService.SendLogError(e); } catch (System.Exception ex) { return StatusCode(503, ex.Message); }
+       //         return StatusCode(503, e);
+       //     }
+       // }
     }
 }

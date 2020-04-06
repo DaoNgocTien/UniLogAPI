@@ -33,6 +33,8 @@ namespace DataService.RequestModels
         [StringLength(200, MinimumLength = 0, ErrorMessage = "The {0} value cannot exceed {1} characters. ")]
         [DataType(DataType.Text)]
         public  string ReleaseUrl { get; set; }
+        [JsonProperty("app_code")]
+        public string AppCode { get; set; }
 
         public  readonly DateTime UpdateTime = DateTime.UtcNow.AddHours(7);
     }

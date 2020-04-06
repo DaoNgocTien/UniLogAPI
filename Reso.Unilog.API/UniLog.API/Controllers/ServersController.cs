@@ -3,6 +3,7 @@ using DataService.Models.Repositories;
 using DataService.Models.Services;
 using DataService.RequestModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Net;
@@ -10,15 +11,16 @@ using System.Net;
 namespace UniLog.API.Controllers
 {
     [Authorize]
-    [Authorize][Route("api/servers")]
+    [Route("api/servers")]
     [ApiController]
+    [EnableCors("AllowOrigin")]
     public class ServersController : ControllerBase
     {
         private readonly ServerService _service;
         private readonly LogService _logService;
         private readonly IServerRepository _repo;
         private readonly ServerDetailService _serverDetailService;
-        public ServersController(IServerRepository repo,ServerService service, LogService logService, ServerDetailService serverDetailService)
+        public ServersController(IServerRepository repo, ServerService service, LogService logService, ServerDetailService serverDetailService)
         {
             _service = service;
             _logService = logService;
@@ -78,19 +80,19 @@ namespace UniLog.API.Controllers
             try
             {
                 //  Check Server Master
-                if (model.ServerMaster != null && model.ServerMaster != 0)
-                {
-                    ServerFilter filter = new ServerFilter()
-                    {
-                        ids = (int)model.ServerMaster + ""
-                    };
-                    if (_service.Get(filter).FirstOrDefault() == null)
-                        return BadRequest(new { error = "Server Master is not existed!" });
-                }
-                else
-                {
-                    model.ServerMaster = null;
-                }
+                //if (model.ServerMaster != null && model.ServerMaster != 0)
+                //{
+                //    ServerFilter filter = new ServerFilter()
+                //    {
+                //        ids = (int)model.ServerMaster + ""
+                //    };
+                //    if (_service.Get(filter).FirstOrDefault() == null)
+                //        return BadRequest(new { error = "Server Master is not existed!" });
+                //}
+                //else
+                //{
+                //    model.ServerMaster = null;
+                //}
                 if ((model.Type == 1 || model.Type == 2) && model.Os > 2)
                 {
                     return BadRequest(new { error = "Web Server only be Windows or Linux" });
@@ -103,14 +105,14 @@ namespace UniLog.API.Controllers
                 {
                     return BadRequest(new { error = "Database Server - Server Os should be between 7 and 10" });
                 }
-                if (model.IpAddress != null && !IPAddress.TryParse(model.IpAddress, out IPAddress address))
-                {
-                    return BadRequest(new { error = "IpAdress is wrong format!" });
-                }
+                //if (model.IpAddress != null && !IPAddress.TryParse(model.IpAddress, out IPAddress address))
+                //{
+                //    return BadRequest(new { error = "IpAdress is wrong format!" });
+                //}
                 var result = _service.Create(model);
                 if (result == null)
                 {
-                    return BadRequest("Invalid company_id or server name");
+                    return BadRequest("Invalid server name");
                 }
 
                 //  Create Server Detail
@@ -122,15 +124,15 @@ namespace UniLog.API.Controllers
                 //        return BadRequest("Server created but server detail is invalid");
                 //    }
                 //}
-                
+
                 return Ok(result);
             }
             catch (System.Exception e)
             {
                 try { _logService.SendLogError(e); } catch (System.Exception ex) { return StatusCode(503, ex); }
-                 
-            
-             //   
+
+
+                //   
                 return StatusCode(503, e);
             }
         }
@@ -174,21 +176,11 @@ namespace UniLog.API.Controllers
                     return BadRequest(new { error = "IpAdress is wrong format!" });
                 }
                 var result = _service.Update(model);
-                if (model == null)
+                if (result == null)
                 {
                     BadRequest(new { error = "Invalid Server" });
                 }
 
-                //  Update ServerDetail
-                if(model.ServerDetail != null)
-                {
-                    var updateServerDetail = _serverDetailService.Update(model.ServerDetail);
-                    if(updateServerDetail == null)
-                    {
-                        return BadRequest("Server updated but server detail is invalid");
-                    }
-                }
-                
                 return Ok(result);
             }
             catch (System.Exception e)
@@ -199,16 +191,27 @@ namespace UniLog.API.Controllers
         }
 
         [HttpPatch]
+
         public IActionResult PartialUpdate(ServerPartialUpdateRequestModel model)
         {
             try
             {
-                var result = _service.PartialUpdate(model);
-                if (result == null)
+                if (model.ChangeStatus)
                 {
-                    return BadRequest(new { error = "Server not existed" });
+                    if (model.ChangeStatus)
+                    {
+                        var result = _service.PartialUpdate(model);
+                        if (result == null)
+                        {
+                            return BadRequest(new { error = "Server not existed" });
+                        }
+                        return Ok(result);
+                    }
                 }
-                return Ok(result);
+
+                //  Update / Create Server Detail
+                model.ServerDetail.ServerId = model.Id;
+                return Ok(_serverDetailService.Update(model.ServerDetail));
             }
             catch (System.Exception e)
             {

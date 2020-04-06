@@ -35,8 +35,6 @@ namespace DataService.ServiceModels
 		public DateTime? UpdateTime { get; set; }
 		[JsonProperty("app")]
 		public ApplicationServiceModel App { get; set; }
-		[JsonProperty("activity_log")]
-		public IEnumerable<ActivityLogServiceModel> ActivityLog { get; set; }
 		[JsonProperty("log")]
 		public IEnumerable<LogServiceModel> Log { get; set; }
 		[JsonProperty("manage_project")]
@@ -78,8 +76,6 @@ namespace DataService.ServiceModels
 		public Wrapper<DateTime?> UpdateTime { get; set; }
 		[JsonProperty("app")]
 		public ApplicationServiceModel App { get; set; }
-		[JsonProperty("activity_log")]
-		public IEnumerable<ActivityLogServiceModel> ActivityLog { get; set; }
 		[JsonProperty("log")]
 		public IEnumerable<LogServiceModel> Log { get; set; }
 		[JsonProperty("manage_project")]
