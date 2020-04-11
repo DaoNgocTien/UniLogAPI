@@ -197,6 +197,11 @@ namespace DataService.Models.Repositories
 			return dbSet.Where(expr);
 		}
 
+		//public IQueryable<E> Get()
+		//{
+		//	throw new NotImplementedException();
+		//}
+
 		public IQueryable<E> Get()
 		{
 			return dbSet;

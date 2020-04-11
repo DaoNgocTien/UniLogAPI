@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using TNT.Core.Helpers.Data;
 
 namespace DataService.Models.Services
 {
@@ -21,6 +22,7 @@ namespace DataService.Models.Services
         bool CheckValidEmail(string email);
         string AddEmployee(ProjectAssignment model);
         string ChangePassword(PasswordModel passwordModel);
+        object GetProjectManagement(string email);
     }
     public class AccountService : BaseService<AccountRepository, Account, AccountFilter, int, AccountServiceModel, AuthorizeRegisterModel, AccountUpdateRequestModel, AccountServiceModel>, IAccountService
     {
@@ -134,12 +136,20 @@ namespace DataService.Models.Services
                 {
                     return null;
                 }
+
+                //  get all project in charge
+                var projects = _manageProjectRepository.Get().Where(p => p.AccountId == account.Id);
+                var listProjects = projects.Select(s => Mapper.Map<ManageProject, ManageProjectServiceModel>(s)).ToList();
+                var fields = ("id," + "application_id,application_instance_id").Split(',');
+                var returnList = listProjects.SelectOnly(false, SelectOption.ByJsonProperty, fields);
+
                 var result = new LoginResponseModel();
                 result.Id = account.Id;
                 //  get JWT from AspNetUserLogins.LoginProvider
                 result.Token = (aspUser.AspNetUserLogins.FirstOrDefault()).LoginProvider;
                 result.Role = account.Role;
                 result.Email = account.Email;
+                result.manage_project = returnList;
                 return result;
             }
             catch (Exception)
@@ -202,7 +212,7 @@ namespace DataService.Models.Services
                 {
                     UserId = aspNetUser.Id,
                     RoleId = requestModel.Role,
-                    
+
                 };
                 _aspNetUserRolesRepository.Create(aspUserRoles);
                 _aspNetUserRolesRepository.SaveChanges();
@@ -237,7 +247,7 @@ namespace DataService.Models.Services
                 {
                     String a = "aa";
                     int aa = int.Parse(a);
-                 }
+                }
                 //  Modify list email send
                 List<EmailAddress> fromEmail = new List<EmailAddress>();
                 fromEmail.Add(new EmailAddress()
@@ -463,6 +473,23 @@ namespace DataService.Models.Services
                 }
                 return "Please recorrect application / application instance";
 
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public object GetProjectManagement(string email)
+        {
+            try
+            {
+                var employee = _repo.Get().Where(p => p.Email == email).FirstOrDefault();
+                if (employee == null)
+                {
+                    return "Employee not exist";
+                }
+                var listProject = _manageProjectRepository.Get().Where(p => p.AccountId == employee.Id);
+                return listProject;
             }
             catch (Exception)
             {

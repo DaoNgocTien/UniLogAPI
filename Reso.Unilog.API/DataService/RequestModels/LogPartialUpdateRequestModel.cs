@@ -8,6 +8,8 @@ namespace DataService.RequestModels
     public  class LogPartialUpdateRequestModel
     {
         [JsonProperty("id")]
-        public  int Id { get; set; }
+        public  int Id { get; set; } 
+        [JsonProperty("active")]
+        public  bool Active { get; set; }
     }
 }

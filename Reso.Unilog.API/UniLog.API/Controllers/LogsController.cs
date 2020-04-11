@@ -71,6 +71,31 @@ namespace UniLog.API.Controllers
                 
                 return StatusCode(503, e);
             }
+        }  
+        [HttpPatch]
+        public IActionResult UpdateStatus(LogPartialUpdateRequestModel requestModel)
+        {
+            try
+            {
+                if (requestModel == null || requestModel.Id == 0)
+                {
+                    return BadRequest();
+                }
+
+                var result = _service.PartialUpdate (requestModel);
+                if (result == null)
+                {
+                    return BadRequest(requestModel);
+                }
+                return Ok(result);
+            }
+            
+            catch (Exception e)
+            {
+                try { _service.SendLogError(e); } catch (System.Exception ex) { return StatusCode(503, ex.Message); }
+                
+                return StatusCode(503, e);
+            }
         }
     }
 }

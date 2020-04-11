@@ -221,5 +221,25 @@ namespace UniLog.API.Controllers
                 return StatusCode(503, e);
             }
         }
+
+        [HttpGet]
+        [Route("project_management")]
+        public IActionResult GetProjectManagement(string email)
+        {
+            try
+            {
+                var result = _service.GetProjectManagement(email);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                return BadRequest(email);
+            }
+            catch (System.Exception e)
+            {
+                try { _logService.SendLogError(e); } catch (System.Exception ex) { return StatusCode(503, ex.Message); }
+                return StatusCode(503, e);
+            }
+        }
     }
 }

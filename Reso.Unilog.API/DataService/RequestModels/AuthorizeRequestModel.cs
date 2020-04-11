@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DataService.ServiceModels;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -32,6 +33,7 @@ namespace DataService.RequestModels
         public  String Token { get; set; }
         public  int Role { get; set; }
         public  String Email { get; set; }
+        public IEnumerable<object> manage_project { get; set; }
     }
 
     //        public  class AuthorizeRegisterModel 

@@ -120,12 +120,12 @@ namespace DataService.Models.Services
         {
             try
             {
-                var result = _repo.GetActive().Where(p => p.Id == requestModel.Id).FirstOrDefault();
+                var result = _repo.Get().Where(p => p.Id == requestModel.Id).FirstOrDefault();
                 if (result == null)
                 {
                     return null;
                 }
-                result.Active = false;
+                result.Active = requestModel.Active;
                 _repo.SaveChanges();
                 return Mapper.Map<Log, LogServiceModel>(result);
             }
