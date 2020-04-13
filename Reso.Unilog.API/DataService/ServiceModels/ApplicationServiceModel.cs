@@ -71,6 +71,12 @@ namespace DataService.ServiceModels
 		}
 		
 	}
+
+	public class ApplicationResponseModel: ApplicationServiceModel
+	{
+		[JsonProperty("log_count")]
+		public int LogCount { get; set; }
+	}
 	
 	public partial class UpdateApplicationServiceModel: BaseUpdateServiceModel<UpdateApplicationServiceModel, Application>
 	{

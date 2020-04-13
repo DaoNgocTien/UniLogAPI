@@ -26,8 +26,10 @@ namespace DataService.Global
                 //cfg.CreateMap<ActivityLog, ActivityLogCreateRequestModel>().ReverseMap();
 
                 //cfg.CreateMap<Actor, ActorServiceModel>().ReverseMap();
-
+                
                 cfg.CreateMap<Application, ApplicationServiceModel>().ReverseMap();
+                cfg.CreateMap<ApplicationServiceModel, ApplicationResponseModel>().ReverseMap();
+                cfg.CreateMap<Application, ApplicationResponseModel>().ReverseMap();
                 cfg.CreateMap<Application, ApplicationCreateRequestModel>().ReverseMap();
 
                 //cfg.CreateMap<ApplicationCharacteristic, ApplicationCharacteristicServiceModel>().ReverseMap();

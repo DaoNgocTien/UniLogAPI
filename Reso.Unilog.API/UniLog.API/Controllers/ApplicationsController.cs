@@ -1,9 +1,13 @@
-﻿using DataService.Models.Filters;
+﻿using AutoMapper;
+using DataService.Models;
+using DataService.Models.Filters;
 using DataService.Models.Services;
 using DataService.RequestModels;
+using DataService.ServiceModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace UniLog.API.Controllers
@@ -24,6 +28,7 @@ namespace UniLog.API.Controllers
 
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Get([FromQuery] ApplicationFilter filter)
         {
             try
@@ -33,7 +38,14 @@ namespace UniLog.API.Controllers
                 {
                     return NotFound();
                 }
-                return Ok(result);
+                List<ApplicationResponseModel> responseList = new List<ApplicationResponseModel>();
+                foreach (var app in result.ToList())
+                {
+                    ApplicationResponseModel response = Mapper.Map<ApplicationServiceModel, ApplicationResponseModel>((ApplicationServiceModel)app); ;
+                    response.LogCount = _logService.GetByApplicationID(((ApplicationServiceModel)app).Id);
+                    responseList.Add(response);
+                }
+                return Ok(responseList);
 
             }
             catch (System.Exception e)

@@ -5,6 +5,7 @@ using DataService.RequestModels;
 using DataService.ServiceModels;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DataService.Models.Services
@@ -14,11 +15,14 @@ namespace DataService.Models.Services
         void SendLogError(Exception e);
         void SendLogError(Exception e, string appCode);
         LogCreateRequestModel ParseExceptionToExceptionModel(Exception e);
+        int GetByApplicationID(int application_id);
     }
     public class LogService : BaseService<LogRepository, Log, LogFilter, int, LogServiceModel, LogCreateRequestModel, LogUpdateRequestModel, LogPartialUpdateRequestModel>
     {
-        public LogService(LogRepository repo, LogServiceModel model) : base(repo, model)
+        ApplicationInstanceService _appInsSer = null;
+        public LogService(LogRepository repo, LogServiceModel model, ApplicationInstanceService appInsSer) : base(repo, model)
         {
+            _appInsSer = appInsSer;
         }
 
         public override IQueryable<Log> GetSpecificRequests(LogFilter filter, IQueryable<Log> list)
@@ -43,6 +47,7 @@ namespace DataService.Models.Services
                     {
                         list = list.Where(p => p.LogType == filter.serverity);
                     }
+                   
                 }
                 return list;
             }
@@ -74,6 +79,37 @@ namespace DataService.Models.Services
                 throw;
             }
             
+        }
+
+        public int GetByApplicationID(int application_id)
+        {
+            List<object> resultList = new List<object>();
+            if (application_id > 0)
+            {
+               
+                List<string> listAppCode = new List<string>();
+                ApplicationInstanceFilter appInsFilter = new ApplicationInstanceFilter()
+                {
+                    application_id = (int)application_id
+                };
+                var listAppIns = _appInsSer.Get(appInsFilter);
+                foreach (var item in listAppIns)
+                {
+                    LogFilter logFilter = new LogFilter()
+                    {
+                        app_code = ((ApplicationInstanceServiceModel)item).AppCode
+                    };
+                    var logList = this.Get(logFilter);
+                    if (logList.Count() > 0)
+                    {
+                        foreach (var items in logList.ToList())
+                        {
+                            resultList.Add(items);
+                        }
+                    }
+                }                
+            }
+            return resultList.Count();
         }
 
         #region Parse Exception
